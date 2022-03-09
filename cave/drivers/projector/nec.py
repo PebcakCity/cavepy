@@ -33,8 +33,8 @@ from socket import socket, create_connection
 
 from serial import Serial
 
-from utils import merge_dicts, key_for_value
-from utils.byteops import Byte
+from cave.utils import merge_dicts, key_for_value
+from cave.utils.byteops import Byte
 from cave.drivers.projector import ProjectorInterface
 from cave.errors import (UnsupportedOperationError, OutOfRangeError, DeviceNotReadyError,
                          BadCommandError, CommandFailureError)

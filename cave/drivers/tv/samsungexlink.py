@@ -10,7 +10,7 @@ import sys
 from serial import Serial
 
 from cave.drivers.tv import TVInterface
-from utils import merge_dicts, key_for_value
+from cave.utils import merge_dicts, key_for_value
 RECVBUF = 2048
 
 logger = logging.getLogger('SamsungExLink')

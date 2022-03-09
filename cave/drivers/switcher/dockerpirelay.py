@@ -17,7 +17,7 @@ import time
 import smbus
 import sys
 
-from utils import merge_dicts, key_for_value
+from cave.utils import merge_dicts, key_for_value
 from cave.drivers.switcher import SwitcherInterface
 
 logger = logging.getLogger('DockerPiRelay')

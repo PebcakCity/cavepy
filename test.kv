@@ -1,0 +1,73 @@
+#:kivy 2.0.0
+#:import Factory kivy.factory.Factory
+
+<ActionSpinnerOptions@SpinnerOption>
+    background_color: .4, .4, .4, 1
+
+<ActionSpinner@Spinner+ActionItem>
+    canvas.before:
+        Color:
+            rgba: 0.128, 0.128, 0.128, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    border: 27, 20, 12, 12
+    background_normal: 'atlas://data/images/defaulttheme/action_group'
+    option_cls: Factory.ActionSpinnerOptions
+
+<TestRootWidget>:
+    id: trw
+    popup: popup.__self__
+    orientation: 'vertical'
+
+    canvas.before:
+        Color:
+            rgb: .6, .6, .6
+        Rectangle:
+            size: self.size
+            source: 'cave/data/images/burdick.png'
+
+    Popup:
+        size_hint: (None, None)
+        size: (300, 200)
+        id: popup
+        title: "Please wait"
+        on_parent:
+            if self.parent == trw: self.parent.remove_widget(self)
+        Label:
+            id: popup_label
+            text: 'Please wait while the device powers on.'
+            on_touch_down: popup.dismiss()
+
+    ActionBar:
+        ActionView:
+            id: av
+            ActionPrevious:
+                title: 'Home'
+                size_hint_x: .4
+                on_release: app.go_tab(0)
+
+            ActionSeparator:
+
+            ActionSpinner:
+                id: spin
+                important: True
+                text: 'Jump to screen:'
+                values: app.available_tabs
+                on_text:
+                    idx = app.available_tabs.index(args[1]);\
+                    app.go_tab(idx)
+
+            ActionSeparator:
+
+            ActionButton:
+                text: 'On'
+                icon: 'cave/data/images/power-on.png'
+                size_hint_x: .18
+
+            ActionSeparator:
+
+            ActionButton:
+                text: 'Off'
+                icon: 'cave/data/images/power-off.png'
+                size_hint_x: .18

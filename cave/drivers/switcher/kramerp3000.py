@@ -39,8 +39,8 @@ from time import sleep
 from serial import Serial
 
 from cave.drivers.switcher import SwitcherInterface
-from utils import merge_dicts, key_for_value
-from cave.errors import (BadCommandError, OutOfRangeError, UnsupportedOperationError)
+from cave.utils import merge_dicts, key_for_value
+from cave.errors import (BadCommandError, OutOfRangeError)
 
 BUFF_SIZE = 2048
 

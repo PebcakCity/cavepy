@@ -46,7 +46,7 @@ from time import sleep
 from serial import Serial
 
 from cave.drivers.switcher import SwitcherInterface
-from utils import merge_dicts, key_for_value
+from cave.utils import merge_dicts, key_for_value
 BUFF_SIZE = 2048
 
 logger = logging.getLogger('KramerVP734')

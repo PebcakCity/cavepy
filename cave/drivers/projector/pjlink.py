@@ -7,7 +7,7 @@ import sys
 
 from socket import socket, create_connection
 
-from utils import merge_dicts, key_for_value
+from cave.utils import merge_dicts, key_for_value
 from cave.drivers.projector import ProjectorInterface
 from cave.errors import (OutOfRangeError, DeviceNotReadyError,
                          BadCommandError, CommandFailureError)
