@@ -11,7 +11,8 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
 
-Window.size = (1024, 480)
+# Todo - find a reliable way to determine whether this is running on a Raspberry Pi
+Window.fullscreen = True
 
 
 class MyAccordion(Accordion):
