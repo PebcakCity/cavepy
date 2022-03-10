@@ -43,20 +43,9 @@
         ActionView:
             id: av
             ActionPrevious:
-                title: 'Home'
-                size_hint_x: .4
-                on_release: app.go_tab(0)
-
-            ActionSeparator:
-
-            ActionSpinner:
-                id: spin
-                important: True
-                text: 'Jump to screen:'
-                values: app.available_tabs
-                on_text:
-                    idx = app.available_tabs.index(args[1]);\
-                    app.go_tab(idx)
+                title: app.current_screen_name
+                size_hint_x: .85
+                on_release: app.go_screen(0)
 
             ActionSeparator:
 
