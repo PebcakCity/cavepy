@@ -6,16 +6,8 @@ from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
-from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
-from kivy.uix.widget import Widget
-from kivy.core.window import Window
 
-
-# Todo 1) Find a reliable way to determine whether this is running on a Raspberry Pi
-#      so that Window.fullscreen or Window.size can be set automatically.
-# Window.fullscreen = True
-Window.size = (1024, 480)
 
 SWIPE_THRESHOLD = 20
 
