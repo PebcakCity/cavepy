@@ -3,11 +3,13 @@ from kivy.uix.accordion import AccordionItem
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.factory import Factory
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
 from kivy.uix.label import Label
+from kivy.uix.stacklayout import StackLayout
 from kivy.properties import StringProperty
-
 
 SWIPE_THRESHOLD = 20
 
@@ -49,12 +51,14 @@ class MyAccordionItem(AccordionItem):
         return super(MyAccordionItem, self).on_touch_down(touch)
 
 
-class MyInputButton(Button):
+class IconButton(Button):
     message = StringProperty()
+    icon = StringProperty()
 
-    def __init__(self, msg='', **kwargs):
+    def __init__(self, msg='', icn='', **kwargs):
         self.message = msg
-        super(MyInputButton, self).__init__(**kwargs)
+        self.icon = icn
+        super(IconButton, self).__init__(**kwargs)
 
     def on_release(self):
         app = App.get_running_app()
@@ -78,7 +82,7 @@ class TestRootWidget(BoxLayout):
         acc.orientation = 'horizontal'
         for idx, tab_name in enumerate(self.app.available_screens):
             item = MyAccordionItem(title=tab_name)
-            self.ids['accordion_item_'+str(idx)] = item
+            self.ids['accordion_item_' + str(idx)] = item
             fl = FloatLayout()
             label = Label(text=tab_name)
             label.pos_hint = {'x': .09, 'y': .5}
@@ -89,8 +93,9 @@ class TestRootWidget(BoxLayout):
             gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
             gl.pos_hint = {'x': .1, 'y': .5}
             for i in range(3):
-                btn = MyInputButton(message='This is a message from button #'+str(i+1),
-                                    size_hint_y=None, height='48dp', text='Button '+str(i+1))
+                btn = IconButton(msg='This is a message from button #' + str(i + 1),
+                                 icn='cave/data/images/keyboard.png', size_hint_y=None, height='48dp',
+                                 text='Button ' + str(i + 1))
                 gl.add_widget(btn)
             fl.add_widget(gl)
             item.add_widget(fl)
@@ -113,7 +118,7 @@ class TestApp(App):
     def go_screen(self, idx):
         # Make sure the root window has been created (meaning App.build has returned)
         if self.root is not None:
-            item = self.root.ids['accordion_item_'+str(idx)]
+            item = self.root.ids['accordion_item_' + str(idx)]
             # Make sure the tab is not already expanded.  If it is, the app will crash.
             if item.collapse:
                 item.dispatch('on_touch_down', item)

@@ -1,5 +1,12 @@
 #:kivy 2.0.0
 
+<IconButton@Button>:
+    canvas:
+        Rectangle:
+            source: self.icon
+            pos: self.pos
+            size: (96, 48)
+
 <TestRootWidget>:
     id: trw
     popup: popup.__self__
@@ -29,7 +36,6 @@
             id: av
             ActionPrevious:
                 title: app.current_screen_name
-                size_hint_x: .85
                 on_release: app.go_screen(0)
 
             ActionSeparator:
