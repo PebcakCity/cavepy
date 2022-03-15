@@ -1,73 +1,12 @@
-from kivy.uix.accordion import Accordion
-from kivy.uix.accordion import AccordionItem
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.factory import Factory
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.image import Image
 from kivy.uix.label import Label
-from kivy.uix.stacklayout import StackLayout
 from kivy.properties import StringProperty
 
-SWIPE_THRESHOLD = 20
-
-
-class MyAccordion(Accordion):
-    def __init__(self, **kwargs):
-        self.current_tab_name = ''
-        self.initial = 0
-        super(MyAccordion, self).__init__(**kwargs)
-
-    def on_touch_down(self, touch):
-        self.initial = touch.x
-        return super(MyAccordion, self).on_touch_down(touch)
-
-    def on_touch_up(self, touch):
-        app = App.get_running_app()
-        idx = app.available_screens.index(app.current_screen_name)
-        # Swiping right - move a tab to the left
-        if touch.x - self.initial > SWIPE_THRESHOLD:
-            if idx > 0:
-                app.go_screen(idx - 1)
-        # Swiping left - move a tab to the right
-        elif self.initial - touch.x > SWIPE_THRESHOLD:
-            if idx < len(app.available_screens) - 1:
-                app.go_screen(idx + 1)
-        return super(MyAccordion, self).on_touch_up(touch)
-
-
-class MyAccordionItem(AccordionItem):
-    def __init__(self, **kwargs):
-        super(MyAccordionItem, self).__init__(**kwargs)
-
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            self.accordion.current_tab_name = self.title
-            app = App.get_running_app()
-            app.current_screen_name = self.title
-
-        return super(MyAccordionItem, self).on_touch_down(touch)
-
-
-class IconButton(Button):
-    message = StringProperty()
-    icon = StringProperty()
-
-    def __init__(self, msg='', icn='', **kwargs):
-        self.message = msg
-        self.icon = icn
-        super(IconButton, self).__init__(**kwargs)
-
-    def on_release(self):
-        app = App.get_running_app()
-        tab = app.current_screen_name
-        popup = app.root.ids['popup']
-        popup_label = app.root.ids['popup_label']
-        popup.title = tab
-        popup_label.text = self.message
-        popup.open()
+from cave.ui.iconbutton import IconButton
+from cave.ui.swipeaccordion import SwipeAccordion, SwipeAccordionItem
 
 
 class TestRootWidget(BoxLayout):
@@ -77,51 +16,52 @@ class TestRootWidget(BoxLayout):
         self.build_accordion()
 
     def build_accordion(self):
-        acc = MyAccordion()
-        self.ids['accordion'] = acc
-        acc.orientation = 'horizontal'
-        for idx, tab_name in enumerate(self.app.available_screens):
-            item = MyAccordionItem(title=tab_name)
-            self.ids['accordion_item_' + str(idx)] = item
-            fl = FloatLayout()
-            label = Label(text=tab_name)
-            label.pos_hint = {'x': .09, 'y': .5}
-            label.font_size = '20dp'
-            label.size_hint_x = .8
-            label.size_hint_y = .6
-            fl.add_widget(label)
-            gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
-            gl.pos_hint = {'x': .1, 'y': .5}
-            for i in range(3):
-                btn = IconButton(msg='This is a message from button #' + str(i + 1),
-                                 icn='cave/data/images/keyboard.png', size_hint_y=None, height='48dp',
-                                 text='Button ' + str(i + 1))
-                gl.add_widget(btn)
-            fl.add_widget(gl)
-            item.add_widget(fl)
-            acc.add_widget(item)
-        self.add_widget(acc)
+        acc = self.ids['acc']
+        for idx, tab_title in enumerate(self.app.available_tabs):
+            tab = self.build_accordion_tab(idx, tab_title)
+            acc.add_widget(tab)
         # select first (home) tab
-        self.ids['accordion_item_0'].dispatch('on_touch_down', self.ids['accordion_item_0'])
+        self.ids['accordion_tab_0'].dispatch('on_touch_down', self.ids['accordion_tab_0'])
+
+    def build_accordion_tab(self, idx=0, tab_title=''):
+        tab = SwipeAccordionItem(title=tab_title)
+        self.ids['accordion_tab_' + str(idx)] = tab
+        fl = FloatLayout()
+        label = Label(text=tab_title)
+        label.pos_hint = {'x': .09, 'y': .5}
+        label.font_size = '20dp'
+        label.size_hint_x = .8
+        label.size_hint_y = .6
+        fl.add_widget(label)
+        gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
+        gl.pos_hint = {'x': .1, 'y': .5}
+        for i in range(3):
+            btn = IconButton(msg='This is a message from button #' + str(i + 1),
+                             icn='cave/data/images/keyboard.png', size_hint_y=None, height='48dp',
+                             text='Button ' + str(i + 1))
+            gl.add_widget(btn)
+        fl.add_widget(gl)
+        tab.add_widget(fl)
+        return tab
 
 
 class TestApp(App):
-    current_screen_name = StringProperty()
+    current_tab_name = StringProperty()
 
     def __init__(self):
-        self.available_screens = ['Home', 'Projector', 'Switcher']
+        self.available_tabs = ['Home', 'Projector', 'Switcher']
         super(TestApp, self).__init__()
 
     def build(self):
         return TestRootWidget(self)
 
-    def go_screen(self, idx):
+    def go_tab(self, idx):
         # Make sure the root window has been created (meaning App.build has returned)
         if self.root is not None:
-            item = self.root.ids['accordion_item_' + str(idx)]
+            tab = self.root.ids['accordion_tab_' + str(idx)]
             # Make sure the tab is not already expanded.  If it is, the app will crash.
-            if item.collapse:
-                item.dispatch('on_touch_down', item)
+            if tab.collapse:
+                tab.dispatch('on_touch_down', tab)
 
 
 if __name__ == "__main__":

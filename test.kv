@@ -1,11 +1,11 @@
 #:kivy 2.0.0
 
 <IconButton@Button>:
-    canvas:
-        Rectangle:
-            source: self.icon
-            pos: self.pos
-            size: (48, 48)
+    Image:
+        source: root.icon
+        x: root.x
+        y: root.y
+        size: (48, 48)
 
 <TestRootWidget>:
     id: trw
@@ -35,8 +35,8 @@
         ActionView:
             id: av
             ActionPrevious:
-                title: app.current_screen_name
-                on_release: app.go_screen(0)
+                title: app.current_tab_name
+                on_release: app.go_tab(0)
 
             ActionSeparator:
 
@@ -51,3 +51,7 @@
                 text: 'Off'
                 icon: 'cave/data/images/power-off.png'
                 size_hint_x: .09
+
+    SwipeAccordion:
+        id: acc
+        orientation: 'horizontal'
