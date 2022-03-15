@@ -7,6 +7,13 @@
         y: root.y
         size: (48, 48)
 
+<StatusBar@BoxLayout>:
+    canvas.before:
+        Color:
+            rgb: 0.3, 0.3, 0.3
+        Rectangle:
+            size: self.size
+
 <TestRootWidget>:
     id: trw
     popup: popup.__self__
@@ -35,7 +42,7 @@
         ActionView:
             id: av
             ActionPrevious:
-                title: app.current_tab_name
+                title: app.location + ' - ' + app.current_tab_name
                 on_release: app.go_tab(0)
 
             ActionSeparator:
@@ -44,6 +51,9 @@
                 text: 'On'
                 icon: 'cave/data/images/power-on.png'
                 size_hint_x: .09
+                on_press:
+                    spb.start();\
+                    app.status = 'Making it so...'
 
             ActionSeparator:
 
@@ -51,7 +61,21 @@
                 text: 'Off'
                 icon: 'cave/data/images/power-off.png'
                 size_hint_x: .09
+                on_press:
+                    spb.stop();\
+                    app.status = ''
 
     SwipeAccordion:
         id: acc
         orientation: 'horizontal'
+
+    StatusBar:
+        orientation: 'vertical'
+        size_hint_y: .12
+
+        Label:
+            text: app.status
+        StatusProgressBar:
+            id: spb
+            time: app.time
+            value: 0

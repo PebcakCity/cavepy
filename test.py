@@ -1,11 +1,16 @@
+import time
+
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 
 from cave.ui.iconbutton import IconButton
+from cave.ui.statusprogressbar import StatusProgressBar
 from cave.ui.swipeaccordion import SwipeAccordion, SwipeAccordionItem
 
 
@@ -46,13 +51,18 @@ class TestRootWidget(BoxLayout):
 
 
 class TestApp(App):
+    location = StringProperty()
     current_tab_name = StringProperty()
+    status = StringProperty()
+    time = NumericProperty(0)
 
     def __init__(self):
+        self.location = 'Burdick 115'
         self.available_tabs = ['Home', 'Projector', 'Switcher']
         super(TestApp, self).__init__()
 
     def build(self):
+        Clock.schedule_interval(self._update_clock, 1 / 60.)
         return TestRootWidget(self)
 
     def go_tab(self, idx):
@@ -62,6 +72,9 @@ class TestApp(App):
             # Make sure the tab is not already expanded.  If it is, the app will crash.
             if tab.collapse:
                 tab.dispatch('on_touch_down', tab)
+
+    def _update_clock(self, *args):
+        self.time = time.time()
 
 
 if __name__ == "__main__":
