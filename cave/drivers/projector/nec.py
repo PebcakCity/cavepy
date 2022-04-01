@@ -35,7 +35,7 @@ from serial import Serial
 
 from cave.utils import merge_dicts, key_for_value
 from cave.utils.byteops import Byte
-from cave.drivers.projector import ProjectorInterface
+from cave.drivers.projector import ProjectorInterface, ProjectorPowerState
 from cave.errors import (UnsupportedOperationError, OutOfRangeError, DeviceNotReadyError,
                          BadCommandError, CommandFailureError)
 
@@ -168,6 +168,18 @@ class NEC(ProjectorInterface):
         # refer to [305-3. BASIC INFORMATION REQUEST], p. 83
         'power': {
             0x00: 'Standby (Sleep)',
+            # 2022-04-01:
+            # 0x01 - 0x03 are unmentioned in the NEC manual, however our M300X
+            # returns 0x01 followed by 0x02 during initial power on / spin-up
+            # and then 0x03 while warming up.  More testing should ideally be
+            # done on this.  It may just be older projectors like the M300 that
+            # do that.  I'm leaving 0x03 in here for now as I suspect other
+            # models behave similarly.  0x01 or 0x02 will be reported as an
+            # unknown state, particularly as PJLink has no corresponding
+            # "pre-warming" state.
+            # 0x01: 'Initializing',
+            # 0x02: 'Fan starting',
+            0x03: 'Warming',
             0x04: 'Power On',
             0X05: 'Cooling',
             0x06: 'Standby (Error)',
@@ -423,6 +435,7 @@ class NEC(ProjectorInterface):
             logger.debug('sending: {}'.format(cmd_bytes))
             self.comms.send(cmd_bytes)
             result = self.comms.recv()
+            logger.debug('received: {}'.format(result))
 
             if not result:
                 # Two possibile reasons here:
@@ -504,12 +517,12 @@ class NEC(ProjectorInterface):
         else:
             return True
 
-    def get_power_status(self) -> str:
-        """Return a string representing the power state of the projector.
+    def get_power_status(self) -> ProjectorPowerState:
+        """Return an enum member representing the power state of the projector
+        as close as we are able to tell.
 
-        :rtype: str
-        :returns: Power status string.  Raise exception if status indicates projector is
-            experiencing errors or still cooling down.
+        :rtype: ProjectorPowerState
+        :returns: ProjectorPowerState enum member.
         """
         try:
             data = self.__cmd(cmd=self.Command.STATUS)
@@ -517,14 +530,20 @@ class NEC(ProjectorInterface):
             logger.error('get_power_status(): Exception occurred: {}'.format(e.args))
             raise e
         else:
-            power_state = self.status['power'][data[6]]
-            # error standby mode
-            if "error" in power_state.casefold():
-                raise DeviceNotReadyError("An error occurred during the projector's last usage. "
-                                          "Please report this to IT.")
-            elif "cooling" in power_state.casefold():
-                raise DeviceNotReadyError('Projector cooling down. Please wait until it finishes.')
-            return power_state
+            power_state = self.status['power'].get(data[6], "unknown").casefold()
+
+            if "power on" in power_state:
+                return ProjectorPowerState.ON
+            elif "sleep" in power_state:
+                return ProjectorPowerState.STANDBY
+            elif "error" in power_state:
+                return ProjectorPowerState.ERROR
+            elif "cooling" in power_state:
+                return ProjectorPowerState.COOLING
+            elif "warming" in power_state:
+                return ProjectorPowerState.WARMING
+            else:
+                return ProjectorPowerState.UNKNOWN
 
     @property
     def power_status(self):

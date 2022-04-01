@@ -14,7 +14,16 @@ to many different equipment combinations
 import abc
 from enum import Enum
 
-__all__ = ["ProjectorInterface"]
+__all__ = ["ProjectorInterface", "ProjectorPowerState"]
+
+
+class ProjectorPowerState(Enum):
+    STANDBY = 0
+    ON = 1
+    WARMING = 2
+    COOLING = 3
+    ERROR = 4
+    UNKNOWN = 5
 
 
 class ProjectorInterface(metaclass=abc.ABCMeta):
@@ -77,7 +86,7 @@ class ProjectorInterface(metaclass=abc.ABCMeta):
 
     @property
     @abc.abstractmethod
-    def power_status(self) -> str:
+    def power_status(self) -> ProjectorPowerState:
         raise NotImplementedError
 
     @property

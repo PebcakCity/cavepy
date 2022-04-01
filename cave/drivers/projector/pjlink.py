@@ -8,7 +8,7 @@ import sys
 from socket import socket, create_connection
 
 from cave.utils import merge_dicts, key_for_value
-from cave.drivers.projector import ProjectorInterface
+from cave.drivers.projector import ProjectorInterface, ProjectorPowerState
 from cave.errors import (OutOfRangeError, DeviceNotReadyError,
                          BadCommandError, CommandFailureError)
 
@@ -300,11 +300,11 @@ class PJLink(ProjectorInterface):
         else:
             return True
 
-    def get_power_status(self):
-        """Get the power status of the projector
+    def get_power_status(self) -> ProjectorPowerState:
+        """Get the power state of the projector.
 
-        :rtype: str
-        :returns: String representing the power status
+        :rtype: ProjectorPowerState
+        :returns: ProjectorPowerState enum member
         """
         try:
             result = self.__cmd(cmd=self.Command.POWER_STATUS)
@@ -314,10 +314,17 @@ class PJLink(ProjectorInterface):
         else:
             # result is '%1POWR=0|1|2|3' for 0=Off, 1=On, 2=Cooling, 3=Warming up
             data = int(result[7:].rstrip())
-            state = self.power_state[data].casefold()
-            if "cooling" in state or "warming" in state:
-                raise DeviceNotReadyError('Projector cooling/warming. Please wait until it finishes.')
-            return self.power_state[data]
+            state = self.power_state.get(data, "unknown").casefold()
+            if "standby" in state:
+                return ProjectorPowerState.STANDBY
+            elif "on" in state:
+                return ProjectorPowerState.ON
+            elif "cooling" in state:
+                return ProjectorPowerState.COOLING
+            elif "warming" in state:
+                return ProjectorPowerState.WARMING
+            else:
+                return ProjectorPowerState.UNKNOWN
 
     @property
     def power_status(self):
