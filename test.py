@@ -10,7 +10,7 @@ from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 
 from cave.ui.iconbutton import IconButton
-from cave.ui.statusprogressbar import StatusProgressBar
+from cave.ui.statusactivityindicator import StatusActivityIndicator
 from cave.ui.swipeaccordion import SwipeAccordion, SwipeAccordionItem
 
 
