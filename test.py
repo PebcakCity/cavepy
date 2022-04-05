@@ -9,7 +9,7 @@ from kivy.uix.label import Label
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 
-from cave.ui.iconbutton import IconButton
+from cave.ui.inputbutton import InputButton
 from cave.ui.statusactivityindicator import StatusActivityIndicator
 from cave.ui.swipeaccordion import SwipeAccordion, SwipeAccordionItem
 
@@ -41,9 +41,11 @@ class TestRootWidget(BoxLayout):
         gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
         gl.pos_hint = {'x': .1, 'y': .5}
         for i in range(3):
-            btn = IconButton(msg='This is a message from button #' + str(i + 1),
-                             icn='cave/data/images/keyboard.png', size_hint_y=None, height='48dp',
-                             text='Button ' + str(i + 1))
+            btn = InputButton(device=tab_title, input=str(i+1),
+                              message='Selecting input: ' + str(i+1),
+                              icon='cave/data/images/computer.png',
+                              size_hint_y=None, height='48dp',
+                              text='Button ' + str(i+1))
             gl.add_widget(btn)
         fl.add_widget(gl)
         tab.add_widget(fl)
