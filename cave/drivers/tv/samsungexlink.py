@@ -100,22 +100,23 @@ class SamsungExLink(TVInterface):
             if isinstance(self.connection, Serial):
                 return self.connection.read(size)
 
-    def __init__(self, device='/dev/ttyUSB0', baudrate=9600, timeout=0.1, inputs: dict = None, input_default=None):
+    def __init__(self, serial_device='/dev/ttyUSB0', serial_baudrate=9600, serial_timeout=0.1,
+                 inputs: dict = None, input_default=None):
         """Constructor
 
-        :param str device: Serial device to use.
-        :param int baudrate: Serial baudrate
-        :param float timeout: Read timeout for serial operations.
+        :param str serial_device: Serial device to use.
+        :param int serial_baudrate: Serial baudrate
+        :param float serial_timeout: Read timeout for serial operations.
         :param dict inputs: Custom mapping of input names to byte codes.
             Mapping should be {str, bytes}.  If None, a default input mapping is used.
         :param str input_default: The default input (if any) to select after setup
         """
         try:
             self.comms = self.Comms()
-            self.comms.device = device
-            self.comms.baudrate = baudrate
-            self.comms.timeout = timeout
-            self.comms.connection = Serial(port=device, baudrate=baudrate, timeout=timeout)
+            self.comms.device = serial_device
+            self.comms.baudrate = serial_baudrate
+            self.comms.timeout = serial_timeout
+            self.comms.connection = Serial(port=serial_device, baudrate=serial_baudrate, timeout=serial_timeout)
             self.comms.connection.close()
 
             # get custom input mapping

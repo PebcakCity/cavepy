@@ -173,23 +173,23 @@ class KramerP3000(SwitcherInterface):
                         except BlockingIOError as e:
                             data_available = False
 
-    def __init__(self, serial_device='/dev/ttyUSB0', *, comm_method='serial', serial_baudrate=9600, serial_timeout=0.25,
+    def __init__(self, serial_device='/dev/ttyUSB0', *, serial_baudrate=9600, serial_timeout=0.25,
                  ip_address=None, port=5000, inputs: dict = None, outputs: dict = None, input_default=None):
         """Constructor
 
         The default means of communication is RS-232 serial.  After serial_device,
         all args should be keyword args.
 
-        :param str serial_device: Serial device to use (if comm_method=='serial').
+        :param str serial_device: Serial port to use.
             Default is '/dev/ttyUSB0'
-        :param str comm_method: Communication method.  Supported values are 'serial' and 'tcp'.
-            Defaults is 'serial'.
-        :param int serial_baudrate: Serial baudrate (if comm_method=='serial').
+        :param int serial_baudrate: Serial baudrate of the device.
             Default is 9600.
-        :param float serial_timeout: Read timeout for serial operations (if comm_method=='serial').
+        :param float serial_timeout: Read timeout for serial operations.
             Default is 0.25
-        :param str ip_address: IP address of the device (if comm_method=='tcp').
-        :param int port: Port number to connect to (if comm_method=='tcp').
+        :param str ip_address: IP address of the device (if connecting via LAN instead of serial).
+            Default is None, falling back to connecting via serial port.
+        :param int port: Port number to connect to (if connecting via LAN).
+            Default is 5000.
         :param dict inputs: Custom mapping of input names to input values.
             Mapping should be {str, str}.
             If None, a default mapping is used.
@@ -200,20 +200,20 @@ class KramerP3000(SwitcherInterface):
         :param str input_default: The default input (if any) to select after setup
         """
         try:
-            if comm_method == 'serial':
-                self.comms = self.Comms()
-                self.comms.serial_device = serial_device
-                self.comms.serial_baudrate = serial_baudrate
-                self.comms.serial_timeout = serial_timeout
-                self.comms.connection = Serial(port=serial_device, baudrate=serial_baudrate, timeout=serial_timeout)
-                self.comms.connection.close()
-
-            elif comm_method == 'tcp' and ip_address is not None:
+            if ip_address is not None:
                 self.comms = self.Comms()
                 self.comms.tcp_ip_address = ip_address
                 self.comms.tcp_port = port
                 self.comms.connection = create_connection((ip_address, port), timeout=None)
                 self.comms.connection.setblocking(False)
+                self.comms.connection.close()
+
+            else:
+                self.comms = self.Comms()
+                self.comms.serial_device = serial_device
+                self.comms.serial_baudrate = serial_baudrate
+                self.comms.serial_timeout = serial_timeout
+                self.comms.connection = Serial(port=serial_device, baudrate=serial_baudrate, timeout=serial_timeout)
                 self.comms.connection.close()
 
             # get custom input mapping

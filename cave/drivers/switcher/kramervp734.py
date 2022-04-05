@@ -391,23 +391,21 @@ class KramerVP734(SwitcherInterface):
         }
     }
 
-    def __init__(self, serial_device='/dev/ttyUSB0', serial_baudrate=115200, serial_timeout=0.5, comm_method='serial',
+    def __init__(self, serial_device='/dev/ttyUSB0', serial_baudrate=115200, serial_timeout=0.5,
                  ip_address=None, port=5000, tcp_timeout=2.0, inputs: dict = None, input_default=None):
         """Constructor
 
-        :param str serial_device: The serial device to use (if comm_method=='serial').
+        :param str serial_device: The serial device to use.
             Default is '/dev/ttyUSB0'.
         :param int serial_baudrate: Serial baudrate of the device.
             Default is 115200.
-        :param float serial_timeout: Timeout for serial operations (if comm_method=='serial').
+        :param float serial_timeout: Timeout for serial operations.
             Default is 0.5.
-        :param str comm_method: Communication method.  Supported values are 'serial' and 'tcp'.
-            Default is 'serial'.
-        :param str ip_address: IP address of the device (if comm_method=='tcp').
-        :param int port: Port to connect to (if comm_method=='tcp').
+        :param str ip_address: IP address of the device (if connecting via LAN instead of serial port).
+        :param int port: Port to connect to (if connecting via LAN).
             Default is 5000.
-        :param float tcp_timeout: Timeout for socket operations (if comm_method=='tcp').
-            Default is 2.0. (Lesser values have been problematic with this device.)
+        :param float tcp_timeout: Timeout for socket operations (if connecting via LAN).
+            Default is 2.0. (Lesser values have been problematic with this device during testing.)
         :param dict inputs: Custom mapping of input names to numbers.
         :param str input_default: The default input (if any) to select after setup
         """
@@ -416,20 +414,20 @@ class KramerVP734(SwitcherInterface):
             self._input_status = None
             self._av_mute = None
 
-            if comm_method == 'serial':
-                self.comms = self.Comms()
-                self.comms.serial_device = serial_device
-                self.comms.serial_baudrate = serial_baudrate
-                self.comms.serial_timeout = serial_timeout
-                self.comms.connection = Serial(port=serial_device, baudrate=serial_baudrate, timeout=serial_timeout)
-                self.comms.connection.close()
-
-            elif comm_method == 'tcp' and ip_address is not None:
+            if ip_address is not None:
                 self.comms = self.Comms()
                 self.comms.tcp_ip_address = ip_address
                 self.comms.tcp_port = port
                 self.comms.tcp_timeout = tcp_timeout
                 self.comms.connection = create_connection((ip_address, port), timeout=tcp_timeout)
+                self.comms.connection.close()
+
+            else:
+                self.comms = self.Comms()
+                self.comms.serial_device = serial_device
+                self.comms.serial_baudrate = serial_baudrate
+                self.comms.serial_timeout = serial_timeout
+                self.comms.connection = Serial(port=serial_device, baudrate=serial_baudrate, timeout=serial_timeout)
                 self.comms.connection.close()
 
             # get custom input mapping

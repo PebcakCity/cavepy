@@ -322,7 +322,7 @@ class NEC(ProjectorInterface):
         }
     }
 
-    def __init__(self, ip_address=None, *, port=7142, comm_method='tcp', serial_device=None,
+    def __init__(self, ip_address='192.168.1.100', *, port=7142, serial_device=None,
                  serial_baudrate=38400, serial_timeout=0.1, inputs: dict = None, input_default=None):
         """Constructor
 
@@ -331,17 +331,12 @@ class NEC(ProjectorInterface):
         ip_address, all arguments should be keyword arguments.
 
         :param str ip_address: IP address of the device.
-            (if comm_method=='tcp').
+            Default is 192.168.1.100.
         :param int port: Port to connect to.
-            (if comm_method=='tcp').  Defaults to 7142.
-        :param str comm_method: Communication method. Supported values are 'serial' and 'tcp'.
-            Defaults to 'tcp'.
-        :param str serial_device: The serial device to use.
-            (if comm_method=='serial').
-        :param int serial_baudrate: The serial baudrate of the device.
-            (if comm_method=='serial').
-        :param float serial_timeout: Read timeout for serial operations.
-            (if comm_method=='serial').
+            Defaults to 7142.
+        :param str serial_device: The serial port to use (if connecting via serial port instead of TCP/IP).
+        :param int serial_baudrate: The serial baudrate of the device (if connecting via serial port).
+        :param float serial_timeout: Read timeout for serial operations (if connecting via serial port).
         :param dict inputs: Custom mapping of input names to byte values.
             Mapping should be {str, bytes}.  If None, a default mapping is used.
         :param str input_default: The default input (if any) to select after setup
@@ -349,24 +344,19 @@ class NEC(ProjectorInterface):
         self.comms = self.Comms()
 
         try:
-            if comm_method.casefold() == 'serial':
+            if serial_device is not None:
                 connection = Serial(port=serial_device, baudrate=serial_baudrate, timeout=serial_timeout)
                 self.comms.serial_device = serial_device
                 self.comms.serial_baudrate = serial_baudrate
                 self.comms.serial_timeout = serial_timeout
                 self.comms.connection = connection
                 self.comms.connection.close()
-            elif comm_method.casefold() == 'tcp':
-                if ip_address is not None and port is not None:
-                    connection = create_connection((ip_address, port))
-                    self.comms.tcp_ip_address = ip_address
-                    self.comms.tcp_port = port
-                    self.comms.connection = connection
-                    self.comms.connection.close()
-                else:
-                    raise ValueError("tcp connection requested but no address specified!")
             else:
-                raise ValueError("comm_method should be 'tcp' or 'serial'")
+                connection = create_connection((ip_address, port))
+                self.comms.tcp_ip_address = ip_address
+                self.comms.tcp_port = port
+                self.comms.connection = connection
+                self.comms.connection.close()
 
             # get custom input mapping
             if inputs and isinstance(inputs, dict):
