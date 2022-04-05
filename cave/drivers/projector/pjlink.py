@@ -12,7 +12,6 @@ from cave.drivers.projector import ProjectorInterface, ProjectorPowerState
 from cave.errors import (OutOfRangeError, DeviceNotReadyError,
                          BadCommandError, CommandFailureError)
 
-
 BUFF_SIZE = 512
 
 logger = logging.getLogger('PJLink')
@@ -340,15 +339,17 @@ class PJLink(ProjectorInterface):
         try:
             power_status = self.get_power_status()
             if power_status is not None:
-                if "power on" in power_status.casefold():
+                if power_status == ProjectorPowerState.ON:
                     return self.power_off()
-                elif "standby" in power_status.casefold():
+                elif power_status == ProjectorPowerState.STANDBY:
                     return self.power_on()
+                elif power_status == ProjectorPowerState.UNKNOWN:
+                    logger.warning('Check connection to projector. Unable to determine power state.')
                 else:
                     # status is cooling down or warming up, ignore this request
                     return False
         except Exception as e:
-            # it was already logged by one of the methods above, just raise it
+            logger.error('Exception: {}'.format(e.args))
             raise e
 
     def get_input_status(self):
