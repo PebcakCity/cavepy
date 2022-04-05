@@ -52,7 +52,7 @@
                 icon: 'cave/data/images/power-on.png'
                 size_hint_x: .09
                 on_press:
-                    spb.start();\
+                    sai.start();\
                     app.status = 'Making it so...'
 
             ActionSeparator:
@@ -62,7 +62,7 @@
                 icon: 'cave/data/images/power-off.png'
                 size_hint_x: .09
                 on_press:
-                    spb.stop();\
+                    sai.stop();\
                     app.status = ''
 
     SwipeAccordion:
@@ -75,7 +75,7 @@
 
         Label:
             text: app.status
-        StatusProgressBar:
-            id: spb
+        StatusActivityIndicator:
+            id: sai
             time: app.time
             value: 0
