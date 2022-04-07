@@ -21,7 +21,7 @@ class InputButton(Button):
         app.equip[self._device_id]['driver'].select_input(self._input)
         # ..
 
-        tab = app.current_tab_name
+        tab = app.current_tab_title
         popup = app.root.ids['popup']
         popup_label = app.root.ids['popup_label']
         popup.title = tab
