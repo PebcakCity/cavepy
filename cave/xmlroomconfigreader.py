@@ -44,6 +44,8 @@ class XmlRoomConfigReader:
                     equip['inputs'][input_tag.get('name')] = input_tag.text.strip()
                 elif 'numeric' == inputs_type:
                     equip['inputs'][input_tag.get('name')] = int(input_tag.text.strip())
+                elif 'bytes' == inputs_type:
+                    equip['inputs'][input_tag.get('name')] = input_tag.text.strip().encode()
 
             if 'serial' in tag.attrib:
                 equip['comms_method'] = 'serial'
