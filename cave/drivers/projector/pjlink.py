@@ -24,7 +24,7 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 file_handler = logging.FileHandler('cave.log')
-file_handler.setLevel(logging.WARNING)
+file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
@@ -205,11 +205,13 @@ class PJLink(ProjectorInterface):
 
         try:
             self.open_connection()
+            logger.debug('Sending: {}'.format(cmd_bytes.decode()))
             self.comms.send(cmd_bytes)
             # first thing returned is always some junk
             # ("%1PJLINK" followed by 0 or 1 depending on whether authentication is enabled)
             junk_data = self.comms.recv(BUFF_SIZE)
             result = self.comms.recv(BUFF_SIZE)
+            logger.debug('Received: {}'.format(result.decode()))
 
             # close the connection after each command
             self.comms.connection.close()
