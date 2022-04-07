@@ -42,8 +42,8 @@
         ActionView:
             id: av
             ActionPrevious:
-                title: app.location + ' - ' + app.current_tab_name
-                on_release: app.go_tab(0)
+                title: app.location + ' - ' + app.current_tab_title
+                on_release: app.go_tab(list(app.available_tabs.keys())[0])
 
             ActionSeparator:
 
@@ -68,6 +68,66 @@
     SwipeAccordion:
         id: acc
         orientation: 'horizontal'
+
+#        SwipeAccordionItem:
+#            id: accordion_tab_0
+#            title: 'Home'
+#
+#            FloatLayout:
+#
+#                Label:
+#                    text: 'Home'
+#                    pos_hint_x: .09
+#                    pos_hint_y: .5
+#                    font_size: '20dp'
+#                    size_hint_x: .8
+#                    size_hint_y: .6
+#
+#                GridLayout:
+#                    cols: 4
+#                    spacing: '20dp'
+#                    size_hint_x: .8
+#                    size_hint_y: None
+#                    pos_hint_x: .1
+#                    pos_hint_y: .5
+#
+#                    InputButton:
+#                        size_hint_y: None
+#                        height: '48dp'
+#                        text: 'Computer'
+#                        _device_id: 'test_projector'
+#                        _input: 'RGB_1'
+#                        Image:
+#                            source: 'cave/data/images/computer.png'
+#                            x: root.x
+#                            y: root.y
+#                            size: (48, 48)
+#
+#                    InputButton:
+#                        size_hint_y: None
+#                        height: '48dp'
+#                        text: 'HDMI'
+#                        _device_id: 'test_projector'
+#                        _input: 'HDMI_1'
+#                        Image:
+#                            source: 'cave/data/images/blank.png'
+#                            x: root.x
+#                            y: root.y
+#                            size: (48, 48)
+#
+#                    InputButton:
+#                        size_hint_y: None
+#                        height: '48dp'
+#                        text: 'Video (composite)'
+#                        _device_id: 'test_projector'
+#                        _input: 'VIDEO_1'
+#                        Image:
+#                            source: 'cave/data/images/blank.png'
+#                            x: root.x
+#                            y: root.y
+#                            size: (48, 48)
+
+
 
     StatusBar:
         orientation: 'vertical'

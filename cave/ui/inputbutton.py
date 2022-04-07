@@ -18,7 +18,7 @@ class InputButton(Button):
         app = App.get_running_app()
 
         # ..
-        # app.equip[self._device_id].select_input(self._input)
+        app.equip[self._device_id]['driver'].select_input(self._input)
         # ..
 
         tab = app.current_tab_name
