@@ -1,0 +1,5 @@
+TODO:
+    The config reader class (XmlRoomConfigReader) needs to be called from the
+    App, not the root widget.  It was just easier to do it there for now
+    because until App.build returns, there is no root widget for App to
+    reference when adding new tabs to the accordion interface.
