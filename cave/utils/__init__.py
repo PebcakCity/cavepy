@@ -10,6 +10,16 @@ def key_for_value(d: dict, value):
     return key_list[value_list.index(value)]
 
 
+def index_for_key(d: dict, key):
+    """Find the index of the given key in ordered dict d"""
+    return list(d.keys()).index(key)
+
+
+def index_for_value(d: dict, value):
+    """Find the index of the given value in ordered dict d"""
+    return list(d.values()).index(value)
+
+
 def merge_dicts(first: dict, second: dict):
     """Merge two dicts
 
