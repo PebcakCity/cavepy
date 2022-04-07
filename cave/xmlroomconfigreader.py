@@ -74,7 +74,7 @@ class XmlRoomConfigReader:
                     address, port = equip['comms']
                     equip['driver'] = class_(ip_address=address, port=port, inputs=equip['inputs'])
             else:
-                class_(inputs=equip['inputs'])
+                equip['driver'] = class_(inputs=equip['inputs'])
 
             # Add the device to the app's collection of devices
             self.app.equip[equip['id']] = equip
