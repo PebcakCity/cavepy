@@ -39,13 +39,13 @@
                 <input name="VIDEO_1">21</input>
             </inputs>
         </equip>
-        <equip id="sw01" type="switcher" name="Kramer switcher"
+        <!--<equip id="sw01" type="switcher" name="Kramer switcher"
                driver="cave.drivers.switcher.dockerpirelay.DockerPiRelay" power="0">
             <inputs type="numeric" default="IN_1">
                 <input name="IN_1" icon="cave/data/images/keyboard.png">1</input>
                 <input name="IN_2">2</input>
             </inputs>
-        </equip>
+        </equip>-->
     </equipment>
     <home>
         <devices default="Computer">
