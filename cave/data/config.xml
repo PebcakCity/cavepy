@@ -21,6 +21,7 @@
                     : numeric : input codes are to be treated as numbers
                     : string : input codes are to be treated as ascii strings
                     : base64 : input codes are base64 encoded binary data
+                    : bytes : byte-string (non-base64-encoded)
 
                 default
                     : name of the input to select on reset
@@ -32,10 +33,10 @@
         </equip>
         <equip id="pj02" type="projector" name="NEC projector 2" ip="161.31.66.150" port="4352"
             driver="cave.drivers.projector.pjlink.PJLink" power="1">
-            <inputs type="base64" default="HDMI_1">
-                <input name="RGB_1" icon="cave/data/images/computer.png">AQ==</input>
-                <input name="HDMI_1" icon="cave/data/images/apple.png">Gg==</input>
-                <input name="VIDEO_1">Bg==</input>
+            <inputs type="bytes" default="HDMI_1">
+                <input name="RGB_1" icon="cave/data/images/computer.png">11</input>
+                <input name="HDMI_1" icon="cave/data/images/apple.png">31</input>
+                <input name="VIDEO_1">21</input>
             </inputs>
         </equip>
         <equip id="sw01" type="switcher" name="Kramer switcher"
