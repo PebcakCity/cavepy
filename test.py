@@ -6,6 +6,8 @@ from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+
+from kivy.properties import DictProperty
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 
@@ -99,12 +101,12 @@ class TestApp(App):
     current_tab_title = StringProperty()
     status = StringProperty()
     time = NumericProperty(0)
+    equip = DictProperty({})
 
     def __init__(self):
         super(TestApp, self).__init__()
         self.location = 'Burdick 115'
         self.available_tabs = {}
-        self.equip = {}
 
     def build(self):
         Clock.schedule_interval(self._update_clock, 1 / 60.)
@@ -120,6 +122,11 @@ class TestApp(App):
 
     def _update_clock(self, *args):
         self.time = time.time()
+
+    def on_equip(self, instance, value):
+        print('app.equip was updated!')
+        print(instance)
+        print(value)
 
 
 if __name__ == "__main__":

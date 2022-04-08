@@ -1,5 +1,7 @@
 TODO:
-    The config reader class (XmlRoomConfigReader) needs to be called from the
-    App, not the root widget.  It was just easier to do it there for now
-    because until App.build returns, there is no root widget for App to
-    reference when adding new tabs to the accordion interface.
+    I think that the config reader needs to be only responsible for reading the config
+    and filling in the data structure for the app.  Once all of the data is filled in,
+    a callback can be triggered (on_<propertyname> style for example) that would cause
+    the app to use that data to create the required drivers and other things.
+    As it's creating those device instances, it can also call into methods in the
+    root widget class to create the interface.

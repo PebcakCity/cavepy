@@ -23,6 +23,7 @@ class XmlRoomConfigReader:
         self.location = xml_root.find('./location')
 
         equips = xml_root.findall('./equipment/equip')
+        my_equips = {}
 
         for tag in equips:
             assert('id' in tag.attrib and 'name' in tag.attrib),\
@@ -79,7 +80,9 @@ class XmlRoomConfigReader:
                 equip['driver'] = class_(inputs=equip['inputs'])
 
             # Add the device to the app's collection of devices
-            self.app.equip[equip['id']] = equip
+            my_equips[equip['id']] = equip
 
             # Add the device's control tab
             self.root_widget.add_device_tab(equip['id'], equip)
+
+        self.app.equip = my_equips
