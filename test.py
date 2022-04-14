@@ -11,7 +11,7 @@ from kivy.properties import DictProperty
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 
-from cave.xmlroomconfigreader import XmlRoomConfigReader
+from cave.configreader import ConfigReader
 
 from cave.ui.inputbutton import InputButton
 from cave.ui.statusactivityindicator import StatusActivityIndicator
@@ -27,7 +27,7 @@ class TestRootWidget(BoxLayout):
         # self.build_accordion()
 
         # Horrible...
-        self.config = XmlRoomConfigReader(self)
+        self.config = ConfigReader(self)
 
         # Once all the tabs have been created, fire touch_down event on the first tab.
         # This will in turn set app.current_tab_title and app.current_tab_id.

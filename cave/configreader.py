@@ -10,7 +10,7 @@ from cave.drivers.switcher import SwitcherInterface
 from cave.drivers.tv import TVInterface
 
 
-class XmlRoomConfigReader:
+class ConfigReader:
     def __init__(self, root=None, file='cave/data/config.xml'):
         if root is None:
             return
