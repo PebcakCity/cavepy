@@ -29,7 +29,7 @@ class CommandButton(Button):
         self.message = message
         self.app = App.get_running_app()
 
-    def execute(self):
+    def on_release(self):
         popup = self.app.root.ids['popup']
         popup_label = self.app.root.ids['popup_label']
         tab = self.app.current_tab_title
