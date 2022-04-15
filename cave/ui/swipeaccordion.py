@@ -1,3 +1,4 @@
+import json
 import os.path
 
 from kivy.uix.accordion import Accordion
@@ -56,11 +57,18 @@ class SwipeAccordionItem(AccordionItem):
             fl.add_widget(label)
             gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
             gl.pos_hint = {'x': .1, 'y': .5}
+
+            atlas_file, atlas_url = \
+                "cave/data/images/myatlas.atlas",\
+                "atlas://cave/data/images/myatlas/"
+            with open(atlas_file) as fp:
+                atlas_data = json.load(fp)
+
             for input in device['inputs']:
-                atlas = "atlas://cave/data/images/myatlas/"
                 file = input.casefold().replace(' ', '_')
-                icon = atlas+'blank' if not os.path.exists('cave/data/images/'+file+'.png')\
-                    else atlas+file
+                # Check atlas file to see if icon exists for this input
+                icon = atlas_url+'blank' if file not in atlas_data['myatlas-0.png']\
+                    else atlas_url+file
                 btn = CommandButton(
                     icon=icon,
                     message='Input {} selected'.format(input),
