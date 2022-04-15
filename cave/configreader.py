@@ -12,10 +12,8 @@ from cave.drivers.tv import TVInterface
 
 class ConfigReader:
     def __init__(self, root=None, file='cave/data/config.xml'):
-        if root is None:
-            return
+        print('ConfigReader init')
         self.app = App.get_running_app()
-        self.root_widget = root
         self.config = ElementTree.parse(file)
         xml_root = self.config
 
@@ -62,27 +60,35 @@ class ConfigReader:
                     equip['comms'] = (tag.get('ip'), 21)
 
             assert('driver' in tag.attrib), "Required device attribute 'driver' is unspecified."
-            driver_path = tag.get('driver')
-            module_path, driver_class_name = driver_path.rsplit('.', 1)
-            module = importlib.import_module(module_path)
-            class_ = getattr(module, driver_class_name)
 
-            # Instantiate the device's driver
-            # .. equip['driver'] = class_(...)
-            if 'comms_method' in equip:
-                if equip['comms_method'] == 'serial':
-                    device, baudrate = equip['comms']
-                    equip['driver'] = class_(serial_device=device, serial_baudrate=baudrate, inputs=equip['inputs'])
-                elif equip['comms_method'] == 'ip':
-                    address, port = equip['comms']
-                    equip['driver'] = class_(ip_address=address, port=port, inputs=equip['inputs'])
-            else:
-                equip['driver'] = class_(inputs=equip['inputs'])
+            equip['driver_path'] = tag.get('driver')
 
-            # Add the device to the app's collection of devices
-            my_equips[equip['id']] = equip
+            # at this point, we set app.equipment[equip['id']] to this equip,
+            # and continue the loop
+            # CaveApp will see this new key added to the dictionary (theoretically)
+            # and do everything that used to be done below:
 
-            # Add the device's control tab
-            self.root_widget.add_device_tab(equip['id'], equip)
+            # driver_path = tag.get('driver')
+            # module_path, driver_class_name = driver_path.rsplit('.', 1)
+            # module = importlib.import_module(module_path)
+            # class_ = getattr(module, driver_class_name)
+            #
+            # # Instantiate the device's driver
+            # # .. equip['driver'] = class_(...)
+            # if 'comms_method' in equip:
+            #     if equip['comms_method'] == 'serial':
+            #         device, baudrate = equip['comms']
+            #         equip['driver'] = class_(serial_device=device, serial_baudrate=baudrate, inputs=equip['inputs'])
+            #     elif equip['comms_method'] == 'ip':
+            #         address, port = equip['comms']
+            #         equip['driver'] = class_(ip_address=address, port=port, inputs=equip['inputs'])
+            # else:
+            #     equip['driver'] = class_(inputs=equip['inputs'])
+            #
+            # # Add the device to the app's collection of devices
+            # my_equips[equip['id']] = equip
+            #
+            # # Add the device's control tab
+            # self.root_widget.add_device_tab(equip['id'], equip)
 
-        self.app.equip = my_equips
+            self.app.equipment[equip['id']] = equip
