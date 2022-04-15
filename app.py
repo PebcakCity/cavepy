@@ -48,7 +48,6 @@ class CaveApp(App):
         self.config_reader = ConfigReader()
 
     def on_root_widget_created(self, inst, val):
-        print('on_root_widget_created')
         Clock.schedule_once(self.read_config, .1)
 
     def build(self):
