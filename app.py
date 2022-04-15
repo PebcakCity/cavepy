@@ -91,6 +91,15 @@ class CaveApp(App):
     def read_config(self, *args):
         print('read_config called')
         self.config_reader = ConfigReader()
+        if any(self.available_tabs):
+            first_tab = list(self.available_tabs)[0]
+            self.root.ids[first_tab].dispatch('on_touch_down', self.root.ids[first_tab])
+
+    def go_tab(self, id):
+        if self.root is not None:
+            tab = self.root.ids[id]
+            if tab.collapse:
+                tab.dispatch('on_touch_down', tab)
 
     def on_equipment(self, instance, value):
         print('on_equipment called')
