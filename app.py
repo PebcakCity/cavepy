@@ -96,8 +96,40 @@ class CaveApp(App):
                 )
         else:
             device['driver'] = class_(inputs=device['inputs'])
-
         self.root.add_device_tab(device)
+
+    def update_status(self, text):
+        self.status = text
+        Clock.schedule_once(self.clear_status, 10)
+
+    def clear_status(self, *args):
+        self.status = ''
+        self.root.ids['sai'].stop()
+
+    def power_on_pressed(self):
+        self.root.ids['sai'].start()
+        self.update_status('Making it so...')
+        # Get the device for the current tab
+        device = self.equipment[self.current_tab_id]
+        try:
+            if 'driver' in device:
+                power_on = getattr(device['driver'], 'power_on')
+                power_on()
+        except Exception as e:
+            print('Exception: {}'.format(e.args))
+            self.update_status(str(e.args[0]))
+
+    def power_off_pressed(self):
+        # self.root.ids['sai'].stop()
+        self.update_status('Shutting off display...')
+        device = self.equipment[self.current_tab_id]
+        try:
+            if 'driver' in device:
+                power_off = getattr(device['driver'], 'power_off')
+                power_off()
+        except Exception as e:
+            print('Exception: {}'.format(e.args))
+            self.update_status(str(e.args[0]))
 
 
 if __name__ == "__main__":

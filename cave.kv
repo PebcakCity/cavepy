@@ -51,9 +51,7 @@
                 text: 'On'
                 icon: 'cave/data/images/power_on.png'
                 size_hint_x: .09
-                on_press:
-                    sai.start();\
-                    app.status = 'Making it so...'
+                on_release: app.power_on_pressed()
 
             ActionSeparator:
 
@@ -61,9 +59,7 @@
                 text: 'Off'
                 icon: 'cave/data/images/power_off.png'
                 size_hint_x: .09
-                on_press:
-                    sai.stop();\
-                    app.status = ''
+                on_press: app.power_off_pressed()
 
     SwipeAccordion:
         id: accordion
