@@ -1,13 +1,6 @@
 import base64
-import importlib
-
 from kivy.app import App
-
 from xml.etree import ElementTree
-
-from cave.drivers.projector import ProjectorInterface
-from cave.drivers.switcher import SwitcherInterface
-from cave.drivers.tv import TVInterface
 
 
 class ConfigReader:
