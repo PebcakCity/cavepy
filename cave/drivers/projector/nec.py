@@ -126,17 +126,17 @@ class NEC(ProjectorInterface):
         """ Available commands that work on most models
         """
         # non-parameterized / non-checksummed commands
-        POWER_ON = b'\x02\x00\x00\x00\x00\x02'       # [015. POWER ON], p. 15
-        POWER_OFF = b'\x02\x01\x00\x00\x00\x03'      # [016. POWER OFF], p. 16
-        STATUS = b'\x00\xbf\x00\x00\x01\x02\xc2'     # [305-3. BASIC INFORMATION REQUEST], p. 83-84
-        BASIC_INFO = b'\x03\x8a\x00\x00\x00\x8d'     # [037. INFORMATION REQUEST], p. 32
-        FILTER_INFO = b'\x03\x95\x00\x00\x00\x98'    # [037-3. FILTER USAGE INF. REQ.], p. 33
-        GET_ERRORS = b'\x00\x88\x00\x00\x00\x88'     # [009. ERROR STATUS REQUEST], pp. 13-14
+        POWER_ON = b'\x02\x00\x00\x00\x00\x02'  # [015. POWER ON], p. 15
+        POWER_OFF = b'\x02\x01\x00\x00\x00\x03'  # [016. POWER OFF], p. 16
+        STATUS = b'\x00\xbf\x00\x00\x01\x02\xc2'  # [305-3. BASIC INFORMATION REQUEST], p. 83-84
+        BASIC_INFO = b'\x03\x8a\x00\x00\x00\x8d'  # [037. INFORMATION REQUEST], p. 32
+        FILTER_INFO = b'\x03\x95\x00\x00\x00\x98'  # [037-3. FILTER USAGE INF. REQ.], p. 33
+        GET_ERRORS = b'\x00\x88\x00\x00\x00\x88'  # [009. ERROR STATUS REQUEST], pp. 13-14
         GET_MODEL = b'\x00\x85\x00\x00\x01\x04\x8a'  # [078-5. MODEL NAME REQUEST], p. 66
 
         # parameterized / checksummed commands
         SWITCH_INPUT = b'\x02\x03\x00\x00\x02\x01'  # + input + checksum [018. INPUT SW CHANGE], p. 17
-        LAMP_INFO = b'\x03\x96\x00\x00\x02'         # + lamp_no + data_requested + checksum [037-4.] p. 34
+        LAMP_INFO = b'\x03\x96\x00\x00\x02'  # + lamp_no + data_requested + checksum [037-4.] p. 34
 
     # see Section 2.4 "Error code list", p. 12
     cmd_errors = {
@@ -548,10 +548,9 @@ class NEC(ProjectorInterface):
         try:
             power_status = self.get_power_status()
             if power_status is not None:
-                if "power on" in power_status.casefold():
+                if power_status == ProjectorPowerState.ON:
                     return self.power_off()
-                # one of the non-error standby modes
-                elif "standby" in power_status.casefold():
+                elif power_status == ProjectorPowerState.STANDBY:
                     return self.power_on()
         except Exception as e:
             # we've already logged it in one of the methods above
