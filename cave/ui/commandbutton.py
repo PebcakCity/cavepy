@@ -30,8 +30,8 @@ class CommandButton(Button):
         self.app = App.get_running_app()
 
     def execute(self):
-        popup = self.app.root_widget.ids['popup']
-        popup_label = self.app.root_widget.ids['popup_label']
+        popup = self.app.root.ids['popup']
+        popup_label = self.app.root.ids['popup_label']
         tab = self.app.current_tab_title
         popup.title = tab
         popup_label.text = self.message
