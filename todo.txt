@@ -1,7 +1,37 @@
 TODO:
-    I think that the config reader needs to be only responsible for reading the config
-    and filling in the data structure for the app.  Once all of the data is filled in,
-    a callback can be triggered (on_<propertyname> style for example) that would cause
-    the app to use that data to create the required drivers and other things.
-    As it's creating those device instances, it can also call into methods in the
-    root widget class to create the interface.
+
+Issues:
+    With the program design the way it is, there is no good way to add
+    icons to input buttons.  This has to do with the fact that:
+    1) ConfigReader creates a dictionary of inputs mapping the key (string)
+        to the value (tuple of eg. bytes and icon filename string).  It then
+        saves this info to App's own equipment dictionary var and then it
+        notifies App that it has new data to work with.
+    2) App (in on_equipment) looks at that input dictionary as a whole and
+        passes it through to the driver class constructor.  (This is where the
+        problem lies.)  Then it notifies the root widget to add a new tab to
+        the accordion, passing it the entire dictionary subtree for that
+        equipment item, including the inputs sub-dictionary.
+    3) RootWidget.add_device_tab wants to iterate through these inputs one
+        by one, pulling out the icons to they can be added to each button when
+        created.
+
+    The issue is that if CaveApp.on_equipment creates a driver for the
+    equipment by passing the inputs dictionary subtree as a whole, each input
+    value is a tuple including the icon filename.  The driver does not need
+    this info and it causes input switching not to work (the driver is
+    expecting a bytes-like object for each input code ONLY).
+
+    For now I can loop through the input data in App.on_equipment to remove
+    the icon info, then create the drivers from this modified data.  It's not
+    pretty (nothing about this project is), but it works.  Then the full
+    version of the dictionary gets passed to the RootWidget, so it can create
+    the buttons with icons.
+
+    The only other solution I see is to reorganize the config so that
+    "appy" data is stored and read separately from "widgety" data. We could
+    lose the ConfigReader class altogether and just put the relevant code for
+    reading each section of the file directly in CaveApp and RootWidget
+    respectively.  So the app/drivers get only what they need to make the thing
+    work, and the widget code finds its icons and associates them with the
+    proper device inputs.

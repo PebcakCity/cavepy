@@ -44,8 +44,11 @@ class RootWidget(BoxLayout):
         gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
         gl.pos_hint = {'x': .1, 'y': .5}
         for inp in equipment_item['inputs']:
+            input_code_and_icon = equipment_item['inputs'][inp]
+            input_code = input_code_and_icon[0]
+            icon = input_code_and_icon[1]
             btn = CommandButton(
-                icon='cave/data/images/blank.png',
+                icon=icon,
                 message='Input {} selected'.format(inp),
                 command=Command(
                     self.app.equipment[id]['driver'],
@@ -111,23 +114,33 @@ class CaveApp(App):
         module = importlib.import_module(module_path)
         class_ = getattr(module, driver_class_name)
 
+        inputs = {}
+        if 'inputs' in equipment_item:
+            for input_subkey in equipment_item['inputs']:
+                # Each value is a tuple due to the ConfigReader including the icon info it read.
+                # Just get the first part of the tuple, which should be the input code
+                data = equipment_item['inputs'][input_subkey][0]
+                inputs[input_subkey] = data
+
         if 'comms_method' in equipment_item:
             if equipment_item['comms_method'] == 'serial':
                 device, baudrate = equipment_item['comms']
                 equipment_item['driver'] = class_(
                     serial_device=device,
                     serial_baudrate=baudrate,
-                    inputs=equipment_item['inputs']
+                    # inputs=equipment_item['inputs'],
+                    inputs=inputs
                 )
             elif equipment_item['comms_method'] == 'ip':
                 address, port = equipment_item['comms']
                 equipment_item['driver'] = class_(
                     ip_address=address,
                     port=port,
-                    inputs=equipment_item['inputs']
+                    # inputs=equipment_item['inputs'],
+                    inputs=inputs
                 )
         else:
-            equipment_item['driver'] = class_(inputs=equipment_item['inputs'])
+            equipment_item['driver'] = class_(inputs=inputs)
 
         self.root.add_device_tab(equipment_item)
 

@@ -30,14 +30,15 @@ class ConfigReader:
             inputs_type = inputs.get('type')
             equip['inputs'] = {}
             for input_tag in inputs:
+                icon = 'cave/data/images/blank.png' if 'icon' not in input_tag.attrib else input_tag.get('icon')
                 if 'base64' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = base64.b64decode(input_tag.text.strip())
+                    equip['inputs'][input_tag.get('name')] = (base64.b64decode(input_tag.text.strip()), icon)
                 elif 'string' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = input_tag.text.strip()
+                    equip['inputs'][input_tag.get('name')] = (input_tag.text.strip(), icon)
                 elif 'numeric' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = int(input_tag.text.strip())
+                    equip['inputs'][input_tag.get('name')] = (int(input_tag.text.strip()), icon)
                 elif 'bytes' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = input_tag.text.strip().encode()
+                    equip['inputs'][input_tag.get('name')] = (input_tag.text.strip().encode(), icon)
 
             if 'serial' in tag.attrib:
                 equip['comms_method'] = 'serial'
