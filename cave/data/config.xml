@@ -15,7 +15,7 @@
         -->
         <equip id="pj01" type="projector" name="NEC projector" ip="161.31.66.134" port="7142"
                 driver="cave.drivers.projector.nec.NEC" power="1">
-            <inputs type="base64" default="RGB_1">
+            <inputs type="base64" default="Computer">
                 <!--
                 type
                     : numeric : input codes are to be treated as numbers
@@ -26,24 +26,24 @@
                 default
                     : name of the input to select on reset
                 -->
-                <input name="RGB_1" icon="cave/data/images/computer.png">AQ==</input>
-                <input name="HDMI_1">Gg==</input>
-                <input name="VIDEO_1">Bg==</input>
+                <input name="Computer">AQ==</input>
+                <input name="HDMI">Gg==</input>
+                <input name="Video">Bg==</input>
             </inputs>
         </equip>
         <equip id="pj02" type="projector" name="NEC projector 2" ip="161.31.66.150" port="4352"
             driver="cave.drivers.projector.pjlink.PJLink" power="1">
             <inputs type="bytes" default="HDMI_1">
-                <input name="RGB_1" icon="cave/data/images/computer.png">11</input>
-                <input name="HDMI_1" icon="cave/data/images/apple.png">31</input>
-                <input name="VIDEO_1">21</input>
+                <input name="Computer">11</input>
+                <input name="Apple TV">31</input>
+                <input name="Video">21</input>
             </inputs>
         </equip>
         <!--<equip id="sw01" type="switcher" name="Kramer switcher"
                driver="cave.drivers.switcher.dockerpirelay.DockerPiRelay" power="0">
             <inputs type="numeric" default="IN_1">
-                <input name="IN_1" icon="cave/data/images/keyboard.png">1</input>
-                <input name="IN_2">2</input>
+                <input name="Input 1">1</input>
+                <input name="Input 2">2</input>
             </inputs>
         </equip>-->
     </equipment>
@@ -55,7 +55,7 @@
                     <deviceinput equip="sw01">IN_1</deviceinput>
                 </deviceinputs>
             </device>
-            <device name="Apple TV" icon="apple.png">
+            <device name="Apple TV" icon="apple_tv.png">
                 <deviceinputs>
                     <deviceinput equip="pj01">RGB_1</deviceinput>
                     <deviceinput equip="sw01">IN_2</deviceinput>

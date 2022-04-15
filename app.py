@@ -3,17 +3,12 @@ import time
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
 from kivy.clock import Clock
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
 
 from kivy.properties import (
     BooleanProperty,
     DictProperty,
     NumericProperty,
-    ObjectProperty,
     StringProperty
 )
 
@@ -32,35 +27,8 @@ class RootWidget(BoxLayout):
 
     def add_device_tab(self, equipment_item):
         id = equipment_item['id']
-        tab = SwipeAccordionItem(title=equipment_item['name'])
+        tab = SwipeAccordionItem(equipment_item, title=equipment_item['name'])
         self.ids[id] = tab
-        fl = FloatLayout()
-        label = Label(text=equipment_item['name'])
-        label.pos_hint = {'x': .09, 'y': .5}
-        label.font_size = '20dp'
-        label.size_hint_x = .8
-        label.size_hint_y = .6
-        fl.add_widget(label)
-        gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
-        gl.pos_hint = {'x': .1, 'y': .5}
-        for inp in equipment_item['inputs']:
-            input_code_and_icon = equipment_item['inputs'][inp]
-            input_code = input_code_and_icon[0]
-            icon = input_code_and_icon[1]
-            btn = CommandButton(
-                icon=icon,
-                message='Input {} selected'.format(inp),
-                command=Command(
-                    self.app.equipment[id]['driver'],
-                    'select_input',
-                    inp
-                ),
-                size_hint_y=None, height='48dp',
-                text=inp
-            )
-            gl.add_widget(btn)
-        fl.add_widget(gl)
-        tab.add_widget(fl)
         self.ids['accordion'].add_widget(tab)
         self.app.available_tabs[id] = equipment_item['name']
 
@@ -76,9 +44,8 @@ class CaveApp(App):
     status = StringProperty('')
 
     def __init__(self, **kwargs):
-        print('app init')
         super(CaveApp, self).__init__(**kwargs)
-        self.config_reader = None
+        self.config_reader = ConfigReader()
 
     def on_root_widget_created(self, inst, val):
         print('on_root_widget_created')
@@ -92,8 +59,8 @@ class CaveApp(App):
         self.time = time.time()
 
     def read_config(self, *args):
-        print('read_config called')
-        self.config_reader = ConfigReader()
+        self.config_reader.parse()
+        # Select the first available tab to set app.current_tab_title & id
         if any(self.available_tabs):
             first_tab = list(self.available_tabs)[0]
             self.root.ids[first_tab].dispatch('on_touch_down', self.root.ids[first_tab])
@@ -105,44 +72,33 @@ class CaveApp(App):
                 tab.dispatch('on_touch_down', tab)
 
     def on_equipment(self, instance, value):
-        print('on_equipment called')
         last_key_added = list(value.keys())[len(value.keys())-1]
-        equipment_item = value[last_key_added]
+        device = value[last_key_added]
 
         # Create the driver
-        module_path, driver_class_name = equipment_item['driver_path'].rsplit('.', 1)
+        module_path, driver_class_name = device['driver_path'].rsplit('.', 1)
         module = importlib.import_module(module_path)
         class_ = getattr(module, driver_class_name)
 
-        inputs = {}
-        if 'inputs' in equipment_item:
-            for input_subkey in equipment_item['inputs']:
-                # Each value is a tuple due to the ConfigReader including the icon info it read.
-                # Just get the first part of the tuple, which should be the input code
-                data = equipment_item['inputs'][input_subkey][0]
-                inputs[input_subkey] = data
-
-        if 'comms_method' in equipment_item:
-            if equipment_item['comms_method'] == 'serial':
-                device, baudrate = equipment_item['comms']
-                equipment_item['driver'] = class_(
+        if 'connection' in device:
+            if device['connection'] == 'serial':
+                device, baudrate = device['comms']
+                device['driver'] = class_(
                     serial_device=device,
                     serial_baudrate=baudrate,
-                    # inputs=equipment_item['inputs'],
-                    inputs=inputs
+                    inputs=device['inputs']
                 )
-            elif equipment_item['comms_method'] == 'ip':
-                address, port = equipment_item['comms']
-                equipment_item['driver'] = class_(
+            elif device['connection'] == 'ip':
+                address, port = device['comms']
+                device['driver'] = class_(
                     ip_address=address,
                     port=port,
-                    # inputs=equipment_item['inputs'],
-                    inputs=inputs
+                    inputs=device['inputs']
                 )
         else:
-            equipment_item['driver'] = class_(inputs=inputs)
+            device['driver'] = class_(inputs=device['inputs'])
 
-        self.root.add_device_tab(equipment_item)
+        self.root.add_device_tab(device)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,14 @@
+import os.path
+
 from kivy.uix.accordion import Accordion
 from kivy.uix.accordion import AccordionItem
 from kivy.app import App
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
 
-from cave.utils import (
-    key_for_value,
-    index_for_key,
-    index_for_value
-)
+from cave.ui.commandbutton import Command, CommandButton
+from cave.utils import key_for_value, index_for_key
 
 SWIPE_THRESHOLD = 20
 
@@ -37,9 +39,42 @@ class SwipeAccordion(Accordion):
 
 
 class SwipeAccordionItem(AccordionItem):
-    def __init__(self, **kwargs):
+    def __init__(self, device=None, **kwargs):
         super(SwipeAccordionItem, self).__init__(**kwargs)
         self.app = App.get_running_app()
+        if device is None:
+            # No device, maybe this is home screen?
+            pass
+        else:
+            device_id = device['id']
+            fl = FloatLayout()
+            label = Label(text=device['name'])
+            label.pos_hint = {'x': .09, 'y': .5}
+            label.font_size = '20dp'
+            label.size_hint_x = .8
+            label.size_hint_y = .6
+            fl.add_widget(label)
+            gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
+            gl.pos_hint = {'x': .1, 'y': .5}
+            for input in device['inputs']:
+                atlas = "atlas://cave/data/images/myatlas/"
+                file = input.casefold().replace(' ', '_')
+                icon = atlas+'blank' if not os.path.exists('cave/data/images/'+file+'.png')\
+                    else atlas+file
+                btn = CommandButton(
+                    icon=icon,
+                    message='Input {} selected'.format(input),
+                    command=Command(
+                        self.app.equipment[device_id]['driver'],
+                        'select_input',
+                        input
+                    ),
+                    size_hint_y=None, height='48dp',
+                    text=input
+                )
+                gl.add_widget(btn)
+            fl.add_widget(gl)
+            self.add_widget(fl)
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):

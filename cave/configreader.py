@@ -4,85 +4,52 @@ from xml.etree import ElementTree
 
 
 class ConfigReader:
-    def __init__(self, root=None, file='cave/data/config.xml'):
-        print('ConfigReader init')
+    def __init__(self, file='cave/data/config.xml'):
+        self.config = file
         self.app = App.get_running_app()
-        self.config = ElementTree.parse(file)
-        xml_root = self.config
 
-        # quick and dirty
-        self.location = xml_root.find('./location')
-
+    def parse(self):
+        print('ConfigReader reading file {}'.format(self.config))
+        xml_root = ElementTree.parse(self.config)
+        self.app.location = xml_root.find('./location').text
         equips = xml_root.findall('./equipment/equip')
-        my_equips = {}
 
         for tag in equips:
             assert('id' in tag.attrib and 'name' in tag.attrib),\
                 "Required device attributes 'id' and/or 'name' missing."
-            equip = {
+            device = {
                 'id': tag.get('id'),
                 'name': tag.get('name')
             }
-
             inputs = tag.find('inputs')
-            equip['input_default'] = inputs.get('default')
+            device['input_default'] = inputs.get('default')
 
             inputs_type = inputs.get('type')
-            equip['inputs'] = {}
+            device['inputs'] = {}
             for input_tag in inputs:
-                icon = 'cave/data/images/blank.png' if 'icon' not in input_tag.attrib else input_tag.get('icon')
-                if 'base64' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = (base64.b64decode(input_tag.text.strip()), icon)
-                elif 'string' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = (input_tag.text.strip(), icon)
-                elif 'numeric' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = (int(input_tag.text.strip()), icon)
-                elif 'bytes' == inputs_type:
-                    equip['inputs'][input_tag.get('name')] = (input_tag.text.strip().encode(), icon)
+                input_name = input_tag.get('name')
+                if inputs_type == 'base64':
+                    device['inputs'][input_name] = base64.b64decode(input_tag.text.strip())
+                elif inputs_type == 'string':
+                    device['inputs'][input_name] = input_tag.text.strip()
+                elif inputs_type == 'numeric':
+                    device['inputs'][input_name] = int(input_tag.text.strip())
+                elif inputs_type == 'bytes':
+                    device['inputs'][input_name] = input_tag.text.strip().encode()
 
             if 'serial' in tag.attrib:
-                equip['comms_method'] = 'serial'
+                device['connection'] = 'serial'
                 if 'baud' in tag.attrib:
-                    equip['comms'] = (tag.get('serial'), int(tag.get('baud')))
+                    device['comms'] = (tag.get('serial'), int(tag.get('baud')))
                 else:
-                    equip['comms'] = (tag.get('serial'), 9600)
+                    device['comms'] = (tag.get('serial'), 9600)
             elif 'ip' in tag.attrib:
-                equip['comms_method'] = 'ip'
+                device['connection'] = 'ip'
                 if 'port' in tag.attrib:
-                    equip['comms'] = (tag.get('ip'), int(tag.get('port')))
+                    device['comms'] = (tag.get('ip'), int(tag.get('port')))
                 else:
-                    equip['comms'] = (tag.get('ip'), 21)
+                    device['comms'] = (tag.get('ip'), 21)
 
             assert('driver' in tag.attrib), "Required device attribute 'driver' is unspecified."
-
-            equip['driver_path'] = tag.get('driver')
-
-            # at this point, we set app.equipment[equip['id']] to this equip,
-            # and continue the loop
-            # CaveApp will see this new key added to the dictionary (theoretically)
-            # and do everything that used to be done below:
-
-            # driver_path = tag.get('driver')
-            # module_path, driver_class_name = driver_path.rsplit('.', 1)
-            # module = importlib.import_module(module_path)
-            # class_ = getattr(module, driver_class_name)
-            #
-            # # Instantiate the device's driver
-            # # .. equip['driver'] = class_(...)
-            # if 'comms_method' in equip:
-            #     if equip['comms_method'] == 'serial':
-            #         device, baudrate = equip['comms']
-            #         equip['driver'] = class_(serial_device=device, serial_baudrate=baudrate, inputs=equip['inputs'])
-            #     elif equip['comms_method'] == 'ip':
-            #         address, port = equip['comms']
-            #         equip['driver'] = class_(ip_address=address, port=port, inputs=equip['inputs'])
-            # else:
-            #     equip['driver'] = class_(inputs=equip['inputs'])
-            #
-            # # Add the device to the app's collection of devices
-            # my_equips[equip['id']] = equip
-            #
-            # # Add the device's control tab
-            # self.root_widget.add_device_tab(equip['id'], equip)
-
-            self.app.equipment[equip['id']] = equip
+            device['driver_path'] = tag.get('driver')
+            self.app.equipment[device['id']] = device
