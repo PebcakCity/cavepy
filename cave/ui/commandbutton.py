@@ -30,12 +30,15 @@ class CommandButton(Button):
         self.app = App.get_running_app()
 
     def on_release(self):
-        popup = self.app.root.ids['popup']
-        popup_label = self.app.root.ids['popup_label']
-        tab = self.app.current_tab_title
-        popup.title = tab
-        popup_label.text = self.message
-        popup.open()
-        if self.command is not None:
-            return self.command.execute()
-
+        try:
+            if self.command is not None:
+                self.command.execute()
+        except Exception as e:
+            self.app.update_status(e.args[0])
+        else:
+            popup = self.app.root.ids['popup']
+            popup_label = self.app.root.ids['popup_label']
+            tab = self.app.current_tab_title
+            popup.title = tab
+            popup_label.text = self.message
+            popup.open()
