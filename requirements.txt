@@ -2,8 +2,8 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 docutils==0.18.1
 idna==3.3
-Kivy==2.0.0
-Kivy-examples==2.0.0
+Kivy==2.1.0
+Kivy-examples==2.1.0
 Kivy-Garden==0.1.4
 Pygments==2.11.2
 pyserial==3.5
