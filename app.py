@@ -70,6 +70,10 @@ class CaveApp(App):
             if tab.collapse:
                 tab.dispatch('on_touch_down', tab)
 
+    def go_home(self):
+        if len(self.available_tabs) > 0:
+            self.go_tab(list(self.available_tabs.keys())[0])
+
     def on_equipment(self, instance, value):
         last_key_added = list(value.keys())[len(value.keys())-1]
         device = value[last_key_added]
