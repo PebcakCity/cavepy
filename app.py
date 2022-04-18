@@ -112,7 +112,7 @@ class CaveApp(App):
         # Get the device for the current tab
         device = self.equipment[self.current_tab_id]
         try:
-            if 'driver' in device:
+            if device is not None and 'driver' in device:
                 power_on = getattr(device['driver'], 'power_on')
                 power_on()
         except Exception as e:
@@ -124,7 +124,7 @@ class CaveApp(App):
         self.update_status('Shutting off display...')
         device = self.equipment[self.current_tab_id]
         try:
-            if 'driver' in device:
+            if device is not None and 'driver' in device:
                 power_off = getattr(device['driver'], 'power_off')
                 power_off()
         except Exception as e:
