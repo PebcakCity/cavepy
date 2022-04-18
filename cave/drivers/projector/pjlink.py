@@ -223,19 +223,19 @@ class PJLink(ProjectorInterface):
                 elif b'ERR2' in result:
                     raise OutOfRangeError('Error 2: Parameter out of range: {}'.format(params))
                 elif b'ERR3' in result:
-                    raise DeviceNotReadyError('Warning: Device unavailable.  Is it powered on?')
+                    raise DeviceNotReadyError('Error: Device unavailable.  Is it powered on?')
                 elif b'ERR4' in result:
                     # Be more specific about this error: If we were attempting to switch inputs,
                     # it may be that the unit has not fully powered on yet and is still warming up.
                     if cmd == self.Command.SWITCH_INPUT:
                         raise CommandFailureError(
-                            'Warning: Unable to switch input at this time. '
-                            'Please ensure projector has finished starting up.'
-                            '(Power light will stop flashing when it is ready.)'
+                            "Error: Can't switch input at this time. "
+                            "Wait until projector is fully powered on."
+                            "(Is the light on?)"
                         )
                     else:
                         raise CommandFailureError(
-                            'Warning: Unable to execute command.  Is the projector on?'
+                            'Error: Unable to execute command.  Is the projector powered on?'
                         )
             return result
 
