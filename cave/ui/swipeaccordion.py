@@ -25,17 +25,18 @@ class SwipeAccordion(Accordion):
         return super(SwipeAccordion, self).on_touch_down(touch)
 
     def on_touch_up(self, touch):
-        idx = index_for_key(self.app.available_tabs, self.app.current_tab_id)
-        # Swiping right - move a tab to the left
-        if touch.x - self.initial > SWIPE_THRESHOLD:
-            if idx > 0:
-                new_tab_id = list(self.app.available_tabs)[idx-1]
-                self.app.go_tab(new_tab_id)
-        # Swiping left - move a tab to the right
-        elif self.initial - touch.x > SWIPE_THRESHOLD:
-            if idx < len(self.app.available_tabs) - 1:
-                new_tab_id = list(self.app.available_tabs)[idx+1]
-                self.app.go_tab(new_tab_id)
+        if self.app.current_tab_id:
+            idx = index_for_key(self.app.available_tabs, self.app.current_tab_id)
+            # Swiping right - move a tab to the left
+            if touch.x - self.initial > SWIPE_THRESHOLD:
+                if idx > 0:
+                    new_tab_id = list(self.app.available_tabs)[idx-1]
+                    self.app.go_tab(new_tab_id)
+            # Swiping left - move a tab to the right
+            elif self.initial - touch.x > SWIPE_THRESHOLD:
+                if idx < len(self.app.available_tabs) - 1:
+                    new_tab_id = list(self.app.available_tabs)[idx+1]
+                    self.app.go_tab(new_tab_id)
         return super(SwipeAccordion, self).on_touch_up(touch)
 
 
