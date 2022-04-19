@@ -1,20 +1,14 @@
-import json
-import os.path
-
 from kivy.uix.accordion import Accordion
 from kivy.uix.accordion import AccordionItem
 from kivy.app import App
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
+from kivy.properties import NumericProperty
 
-from cave.ui.commandbutton import Command, CommandButton
 from cave.utils import key_for_value, index_for_key
-
-SWIPE_THRESHOLD = 20
 
 
 class SwipeAccordion(Accordion):
+    swipe_threshold = NumericProperty(20)
+
     def __init__(self, **kwargs):
         self.initial = 0
         super(SwipeAccordion, self).__init__(**kwargs)
@@ -28,12 +22,12 @@ class SwipeAccordion(Accordion):
         if self.app.current_tab_id:
             idx = index_for_key(self.app.available_tabs, self.app.current_tab_id)
             # Swiping right - move a tab to the left
-            if touch.x - self.initial > SWIPE_THRESHOLD:
+            if touch.x - self.initial > self.swipe_threshold:
                 if idx > 0:
                     new_tab_id = list(self.app.available_tabs)[idx-1]
                     self.app.go_tab(new_tab_id)
             # Swiping left - move a tab to the right
-            elif self.initial - touch.x > SWIPE_THRESHOLD:
+            elif self.initial - touch.x > self.swipe_threshold:
                 if idx < len(self.app.available_tabs) - 1:
                     new_tab_id = list(self.app.available_tabs)[idx+1]
                     self.app.go_tab(new_tab_id)
@@ -41,53 +35,12 @@ class SwipeAccordion(Accordion):
 
 
 class SwipeAccordionItem(AccordionItem):
-    def __init__(self, device=None, **kwargs):
+    def __init__(self, **kwargs):
         super(SwipeAccordionItem, self).__init__(**kwargs)
         self.app = App.get_running_app()
-        if device is None:
-            # No device, maybe this is home screen?
-            pass
-        else:
-            device_id = device['id']
-            fl = FloatLayout()
-            label = Label(text=device['name'])
-            label.pos_hint = {'x': .09, 'y': .5}
-            label.font_size = '20dp'
-            label.size_hint_x = .8
-            label.size_hint_y = .6
-            fl.add_widget(label)
-            gl = GridLayout(cols=4, spacing='20dp', size_hint_y=None, size_hint_x=.8)
-            gl.pos_hint = {'x': .1, 'y': .5}
-
-            atlas_file, atlas_url = \
-                "cave/data/images/myatlas.atlas",\
-                "atlas://cave/data/images/myatlas/"
-            with open(atlas_file) as fp:
-                atlas_data = json.load(fp)
-
-            for input in device['inputs']:
-                file = input.casefold().replace(' ', '_')
-                # Check atlas file to see if icon exists for this input
-                icon = atlas_url+'blank' if file not in atlas_data['myatlas-0.png']\
-                    else atlas_url+file
-                btn = CommandButton(
-                    icon=icon,
-                    message='Input {} selected'.format(input),
-                    command=Command(
-                        self.app.equipment[device_id]['driver'],
-                        'select_input',
-                        input
-                    ),
-                    size_hint_y=None, height='48dp',
-                    text=input
-                )
-                gl.add_widget(btn)
-            fl.add_widget(gl)
-            self.add_widget(fl)
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.app.current_tab_title = self.title
             self.app.current_tab_id = key_for_value(self.app.available_tabs, self.title)
-
         return super(SwipeAccordionItem, self).on_touch_down(touch)

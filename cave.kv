@@ -1,5 +1,20 @@
 #: kivy 2.0.0
 
+<DeviceTab>:
+    FloatLayout:
+        id: fl
+        Label:
+            text: root.title
+            pos_hint: {'x': .09, 'y': .5}
+            font_size: '20dp'
+            size_hint: (.8, .6)
+        GridLayout:
+            id: inputs_grid
+            cols: 3
+            spacing: '20dp'
+            size_hint: (.6, None)
+            pos_hint: {'x': .1, 'y': .5}
+
 <CommandButton>:
     Image:
         source: root.icon
@@ -61,7 +76,7 @@
                 size_hint_x: .09
                 on_press: app.power_off_pressed()
 
-    SwipeAccordion:
+    DeviceAccordion:
         id: accordion
         orientation: 'horizontal'
 

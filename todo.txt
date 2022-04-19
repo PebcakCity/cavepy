@@ -1,1 +1,9 @@
 TODO:
+    - Subclass SwipeAccordion (DeviceAccordion) and SwipeAccordionItem
+    (DeviceTab) so that the originals are reuseable.  DONE.
+    - Make SWIPE_THRESHOLD a NumericProperty of SwipeAccordion.  DONE.
+    - Experiment with DeviceAccordion layout in .kv to understand how to fix
+    layout code.
+    - Add side and bottom layouts for TV volume/channel/arrow & enter
+    buttons.
+

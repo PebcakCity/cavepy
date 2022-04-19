@@ -14,7 +14,7 @@ from kivy.properties import (
 
 from cave.configreader import ConfigReader
 from cave.ui.statusactivityindicator import StatusActivityIndicator
-from cave.ui.swipeaccordion import SwipeAccordion, SwipeAccordionItem
+from cave.ui.deviceaccordion import DeviceAccordion, DeviceTab
 from cave.ui.commandbutton import Command, CommandButton
 
 
@@ -27,7 +27,7 @@ class RootWidget(BoxLayout):
 
     def add_device_tab(self, equipment_item):
         id = equipment_item['id']
-        tab = SwipeAccordionItem(equipment_item, title=equipment_item['name'])
+        tab = DeviceTab(equipment_item, title=equipment_item['name'])
         self.ids[id] = tab
         self.ids['accordion'].add_widget(tab)
         self.app.available_tabs[id] = equipment_item['name']
