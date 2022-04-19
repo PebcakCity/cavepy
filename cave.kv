@@ -1,19 +1,57 @@
 #: kivy 2.0.0
 
 <DeviceTab>:
-    FloatLayout:
-        id: fl
-        Label:
-            text: root.title
-            pos_hint: {'x': .09, 'y': .5}
-            font_size: '20dp'
-            size_hint: (.8, .6)
-        GridLayout:
-            id: inputs_grid
-            cols: 3
-            spacing: '20dp'
-            size_hint: (.6, None)
-            pos_hint: {'x': .1, 'y': .5}
+#    FloatLayout:
+#        id: fl
+#        Label:
+#            text: root.title
+#            pos_hint: {'x': .09, 'y': .5}
+#            font_size: '20dp'
+#            size_hint: (.8, .6)
+#        GridLayout:
+#            id: inputs_grid
+#            cols: 3
+#            spacing: '20dp'
+#            size_hint: (.6, None)
+#            pos_hint: {'x': .1, 'y': .5}
+    BoxLayout:
+        id: layout_main
+        orientation: 'vertical'
+        BoxLayout:
+            id: top_box
+            orientation: 'vertical'
+            size_hint: (1, .2)
+            Label:
+                text: root.title
+                font_size: '20dp'
+        BoxLayout:
+            id: mid_box
+            orientation: 'horizontal'
+            size_hint: (1, .8)
+            BoxLayout:
+                id: left_mid_box
+                orientation: 'vertical'
+                size_hint: (.2, None)
+            BoxLayout:
+                id: center_mid_box
+                orientation: 'vertical'
+                size_hint: (.6, None)
+                GridLayout:
+#                    id: inputs_grid
+                    id: center_mid_top_grid
+                    cols: 3
+                    spacing: '20dp'
+                    size_hint: (1, None)
+                GridLayout:
+                    id: center_mid_bottom_grid
+                    cols: 3
+                    spacing: '10dp'
+                    size_hint: (1, None)
+            BoxLayout:
+                id: right_mid_box
+                size_hint: (.2, None)
+
+
 
 <CommandButton>:
     Image:

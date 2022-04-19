@@ -23,26 +23,59 @@ class DeviceTab(SwipeAccordionItem):
             # No device, maybe this is home screen?
             pass
         else:
-            atlas_file, atlas_url = \
-                "cave/data/images/myatlas.atlas",\
-                "atlas://cave/data/images/myatlas/"
-            with open(atlas_file) as fp:
-                atlas_data = json.load(fp)
+            self.build_input_buttons(device)
+            if device.get('type') == 'television':
+                self.build_channel_buttons(device)
 
-            for input in device['inputs']:
-                file = input.casefold().replace(' ', '_')
-                # Check atlas file to see if icon exists for this input
-                icon = atlas_url+'blank' if file not in atlas_data['myatlas-0.png']\
-                    else atlas_url+file
-                btn = CommandButton(
-                    icon=icon,
-                    message='Input {} selected'.format(input),
-                    command=Command(
-                        self.app.equipment[self.device_id]['driver'],
-                        'select_input',
-                        input
-                    ),
-                    size_hint_y=None, height='48dp',
-                    text=input
-                )
-                self.ids['inputs_grid'].add_widget(btn)
+    def build_input_buttons(self, device):
+        atlas_file, atlas_url = \
+            "cave/data/images/myatlas.atlas", \
+            "atlas://cave/data/images/myatlas/"
+        with open(atlas_file) as fp:
+            atlas_data = json.load(fp)
+
+        for input in device['inputs']:
+            file = input.casefold().replace(' ', '_')
+            # Check atlas file to see if icon exists for this input
+            icon = atlas_url + 'blank' if file not in atlas_data['myatlas-0.png'] \
+                else atlas_url + file
+            btn = CommandButton(
+                icon=icon,
+                message='Input {} selected'.format(input),
+                command=Command(
+                    self.app.equipment[self.device_id]['driver'],
+                    'select_input',
+                    input
+                ),
+                size_hint_y=None, height='48dp',
+                text=input
+            )
+            self.ids['center_mid_top_grid'].add_widget(btn)
+
+    def build_channel_buttons(self, device):
+        btn_ch_up = CommandButton(
+            icon='atlas://cave/data/images/myatlas/blank',
+            message='Channel up',
+            command=Command(
+                self.app.equipment[self.device_id]['driver'],
+                'channel_up'
+            ),
+            size_hint_y=None, height='48dp',
+            size_hint_x=None,
+            width='64dp',
+            text='Up'
+        )
+        btn_ch_dn = CommandButton(
+            icon='atlas://cave/data/images/myatlas/blank',
+            message='Channel down',
+            command=Command(
+                self.app.equipment[self.device_id]['driver'],
+                'channel_dn'
+            ),
+            size_hint_y=None, height='48dp',
+            size_hint_x=None,
+            width='64dp',
+            text='Dn'
+        )
+        self.ids['left_mid_box'].add_widget(btn_ch_up)
+        self.ids['left_mid_box'].add_widget(btn_ch_dn)

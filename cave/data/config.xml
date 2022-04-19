@@ -31,12 +31,20 @@
                 <input name="DVD">Bg==</input>
             </inputs>
         </equip>
-        <equip id="pj02" type="projector" name="NEC projector 2" ip="161.31.66.150" port="4352"
+        <!--<equip id="pj02" type="projector" name="NEC projector 2" ip="161.31.66.150" port="4352"
             driver="cave.drivers.projector.pjlink.PJLink" power="1">
             <inputs type="bytes" default="Apple TV">
                 <input name="PC">11</input>
                 <input name="Apple TV">31</input>
                 <input name="Media Player">21</input>
+            </inputs>
+        </equip>-->
+        <equip id="tv01" type="television" name="Samsung TV" serial="/dev/ttyUSB0" baud="9600"
+               driver="cave.drivers.tv.samsungexlink.SamsungExLink">
+            <inputs type="base64" default="HDMI 1">
+                <input name="Live TV">AAA=</input>
+                <input name="HDMI 1">BQA=</input>
+                <input name="Composite">AQA=</input>
             </inputs>
         </equip>
         <!--<equip id="sw01" type="switcher" name="Kramer switcher"
