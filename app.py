@@ -85,9 +85,9 @@ class CaveApp(App):
 
         if 'connection' in device:
             if device['connection'] == 'serial':
-                device, baudrate = device['comms']
+                ser_io, baudrate = device['comms']
                 device['driver'] = class_(
-                    serial_device=device,
+                    serial_device=ser_io,
                     serial_baudrate=baudrate,
                     inputs=device['inputs']
                 )
