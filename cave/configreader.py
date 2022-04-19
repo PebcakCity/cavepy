@@ -17,9 +17,12 @@ class ConfigReader:
         for tag in equips:
             assert('id' in tag.attrib and 'name' in tag.attrib),\
                 "Required device attributes 'id' and/or 'name' missing."
+            assert('type' in tag.attrib),\
+                "Required device attribute 'type' missing."
             device = {
                 'id': tag.get('id'),
-                'name': tag.get('name')
+                'name': tag.get('name'),
+                'type': tag.get('type')
             }
             inputs = tag.find('inputs')
             device['input_default'] = inputs.get('default')
