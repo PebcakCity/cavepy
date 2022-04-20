@@ -9,6 +9,7 @@ from kivy.properties import (
     BooleanProperty,
     DictProperty,
     NumericProperty,
+    ObjectProperty,
     StringProperty
 )
 
@@ -16,6 +17,7 @@ from cave.configreader import ConfigReader
 from cave.ui.statusactivityindicator import StatusActivityIndicator
 from cave.ui.deviceaccordion import DeviceAccordion, DeviceTab
 from cave.ui.commandbutton import Command, CommandButton
+from cave.ui.confirmpopup import ConfirmPopup
 
 
 class RootWidget(BoxLayout):
@@ -111,6 +113,15 @@ class CaveApp(App):
         self.root.ids['sai'].stop()
 
     def power_on_pressed(self):
+        title = self.current_tab_title
+        confirm = ConfirmPopup(
+            title=title,
+            message="Power on device '{}'?".format(title),
+            command=Command(self, 'power_device_on')
+        )
+        confirm.open()
+
+    def power_device_on(self):
         # Get the device for the current tab (or None)
         device = self.equipment.get(self.current_tab_id)
         try:
@@ -124,6 +135,15 @@ class CaveApp(App):
             self.update_status(str(e.args[0]))
 
     def power_off_pressed(self):
+        title = self.current_tab_title
+        confirm = ConfirmPopup(
+            title=title,
+            message="Do you really want to power OFF device '{}'?".format(title),
+            command=Command(self, 'power_device_off')
+        )
+        confirm.open()
+
+    def power_device_off(self):
         device = self.equipment.get(self.current_tab_id)
         try:
             if device is not None and 'driver' in device:
@@ -134,6 +154,7 @@ class CaveApp(App):
         except Exception as e:
             print('Exception: {}'.format(e.args))
             self.update_status(str(e.args[0]))
+
 
 
 if __name__ == "__main__":
