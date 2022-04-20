@@ -116,10 +116,9 @@ class CaveApp(App):
         try:
             if device is not None and 'driver' in device:
                 power_on = getattr(device['driver'], 'power_on')
-                # temporary fix, remove 'if power_on()'...
-                power_on()
-                self.root.ids['sai'].start()
-                self.update_status('Making it so...')
+                if power_on():
+                    self.root.ids['sai'].start()
+                    self.update_status('Making it so...')
         except Exception as e:
             print('Exception: {}'.format(e.args))
             self.update_status(str(e.args[0]))
@@ -129,9 +128,9 @@ class CaveApp(App):
         try:
             if device is not None and 'driver' in device:
                 power_off = getattr(device['driver'], 'power_off')
-                power_off()
-                # self.root.ids['sai'].stop()
-                self.update_status('Shutting off display...')
+                if power_off():
+                    # self.root.ids['sai'].stop()
+                    self.update_status('Shutting off display...')
         except Exception as e:
             print('Exception: {}'.format(e.args))
             self.update_status(str(e.args[0]))

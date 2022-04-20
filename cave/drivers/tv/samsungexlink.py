@@ -183,12 +183,15 @@ class SamsungExLink(TVInterface):
 
     def power_on(self):
         self.__cmd(self.Command.POWER_ON)
+        return True
 
     def power_off(self):
         self.__cmd(self.Command.POWER_OFF)
+        return True
 
     def power_toggle(self):
         self.__cmd(self.Command.POWER_TOGGLE)
+        return True
 
     def select_input(self, input_name: str):
         """Switch the TV's input
