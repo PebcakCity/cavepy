@@ -7,7 +7,7 @@ from cave.utils import key_for_value, index_for_key
 
 
 class SwipeAccordion(Accordion):
-    swipe_threshold = NumericProperty(20)
+    swipe_threshold = NumericProperty(30)
 
     def __init__(self, **kwargs):
         self.initial = 0
