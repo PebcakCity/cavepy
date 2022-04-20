@@ -65,6 +65,7 @@ class SamsungExLink(TVInterface):
         POWER_OFF = b'\x08\x22\x00\x00\x00\x01'
         POWER_TOGGLE = b'\x08\x22\x00\x00\x00\x00'
         SELECT_INPUT = b'\x08\x22\x0a\x00'  # + 2 bytes for the input
+        VOLUME_SET = b'\x08\x22\x01\x00\x00'  # + 1 byte for the volume
         # extra stuff we can do
         KEY_VOL_UP = b'\x08\x22\x01\x00\x01\x00'
         KEY_VOL_DN = b'\x08\x22\x01\x00\x02\x00'
@@ -240,6 +241,9 @@ class SamsungExLink(TVInterface):
 
     def volume_dn(self):
         self.__cmd(self.Command.KEY_VOL_DN)
+
+    def volume_set(self, value: int):
+        self.__cmd(self.Command.VOLUME_SET, bytes([value]))
 
     def key_menu(self):
         self.__cmd(self.Command.KEY_MENU)
