@@ -51,7 +51,7 @@ class DeviceTab(SwipeAccordionItem):
                 size_hint_y=None, height='48dp',
                 text=input
             )
-            self.ids['center_mid_top_grid'].add_widget(btn)
+            self.ids['button_panel_center'].add_widget(btn)
 
     def build_channel_buttons(self, device):
         btn_ch_up = CommandButton(
@@ -63,8 +63,9 @@ class DeviceTab(SwipeAccordionItem):
             ),
             size_hint_y=None, height='48dp',
             size_hint_x=None,
-            width='64dp',
-            text='Up'
+            pos_hint={'center_x': .5, 'center_y': .5},
+            width='96dp',
+            text='Ch. Up'
         )
         btn_ch_dn = CommandButton(
             icon='atlas://cave/data/images/myatlas/blank',
@@ -75,11 +76,12 @@ class DeviceTab(SwipeAccordionItem):
             ),
             size_hint_y=None, height='48dp',
             size_hint_x=None,
-            width='64dp',
-            text='Dn'
+            pos_hint={'center_x': .5, 'center_y': .5},
+            width='96dp',
+            text='Ch. Down'
         )
-        self.ids['left_mid_box'].add_widget(btn_ch_up)
-        self.ids['left_mid_box'].add_widget(btn_ch_dn)
+        self.ids['button_panel_left'].add_widget(btn_ch_up)
+        self.ids['button_panel_left'].add_widget(btn_ch_dn)
 
     def build_volume_controls(self, device):
         btn_vol_up = CommandButton(
@@ -91,8 +93,9 @@ class DeviceTab(SwipeAccordionItem):
             ),
             size_hint_y=None, height='48dp',
             size_hint_x=None,
-            width='64dp',
-            text='+'
+            pos_hint={'center_x': .5},
+            width='96dp',
+            text='Vol +'
         )
         btn_vol_dn = CommandButton(
             icon='atlas://cave/data/images/myatlas/blank',
@@ -103,8 +106,9 @@ class DeviceTab(SwipeAccordionItem):
             ),
             size_hint_y=None, height='48dp',
             size_hint_x=None,
-            width='64dp',
-            text='-'
+            pos_hint={'center_x': .5},
+            width='96dp',
+            text='Vol -'
         )
-        self.ids['right_mid_box'].add_widget(btn_vol_up)
-        self.ids['right_mid_box'].add_widget(btn_vol_dn)
+        self.ids['button_panel_right'].add_widget(btn_vol_up)
+        self.ids['button_panel_right'].add_widget(btn_vol_dn)
