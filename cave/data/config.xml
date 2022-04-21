@@ -44,7 +44,10 @@
             <inputs type="base64" default="HDMI 1">
                 <input name="Live TV">AAA=</input>
                 <input name="HDMI 1">BQA=</input>
+                <input name="HDMI 2">BQE=</input>
+                <input name="HDMI 3">BQI=</input>
                 <input name="Composite">AQA=</input>
+                <input name="Component">AwA=</input>
             </inputs>
         </equip>
         <!--<equip id="sw01" type="switcher" name="Kramer switcher"
