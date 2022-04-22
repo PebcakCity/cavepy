@@ -48,7 +48,7 @@
             BoxLayout:
                 # TVs: Channel buttons on left
                 pos_hint: {'x': 0, 'y': 0}
-                size_hint: (.2, 1)
+                size_hint: (.15, 1)
 #                canvas.before:
 #                    Color:
 #                        rgba: 1, 0, 0, 1
@@ -62,10 +62,11 @@
                         size_hint: (None, None)
                         id: button_panel_left
                         orientation: 'vertical'
+                        spacing: '10dp'
             BoxLayout:
                 # All devices: Input buttons in middle
                 pos_hint: {'x': .2, 'y': 0}
-                size_hint: (.6, 1)
+                size_hint: (.7, 1)
 #                canvas.before:
 #                    Color:
 #                        rgba: 0, 0, 1, 1
@@ -84,7 +85,7 @@
             BoxLayout:
                 # TVs: Volume buttons on right
                 pos_hint: {'x': .8, 'y': 0}
-                size_hint: (.2, 1)
+                size_hint: (.15, 1)
 #                canvas.before:
 #                    Color:
 #                        rgba: 0, 1, 0, 1
@@ -98,13 +99,19 @@
                         size_hint: (None, None)
                         id: button_panel_right
                         orientation: 'vertical'
+                        spacing: '10dp'
         BoxLayout:
             # TVs: Maybe menu/arrow/enter keys?
             id: layout_bottom
             size_hint: (1, .3)
 
 <CommandButton>:
+    background_normal: 'atlas://cave/data/images/myatlas/normal'
+    background_down: 'atlas://cave/data/images/myatlas/down'
+    border: (10, 10, 10, 10)
+
     Image:
+
         source: root.icon
         x: root.x
         y: root.y
