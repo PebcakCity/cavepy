@@ -23,7 +23,7 @@ class CommandButton(Button):
     message = StringProperty('')
     command = ObjectProperty(None)
 
-    def __init__(self, icon='', message='', **kwargs):
+    def __init__(self, icon='atlas://cave/data/images/myatlas/blank', message='', **kwargs):
         super(CommandButton, self).__init__(**kwargs)
         self.icon = icon
         self.message = message

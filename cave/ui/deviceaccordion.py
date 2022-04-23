@@ -55,7 +55,8 @@ class DeviceTab(SwipeAccordionItem):
 
     def build_channel_buttons(self, device):
         btn_ch_up = CommandButton(
-            icon='atlas://cave/data/images/myatlas/blank',
+            background_normal='atlas://cave/data/images/myatlas/arrow_up_normal',
+            background_down='atlas://cave/data/images/myatlas/arrow_up_down',
             message='Channel up',
             command=Command(
                 device['driver'],
@@ -64,10 +65,12 @@ class DeviceTab(SwipeAccordionItem):
             size_hint_y=None, height='48dp',
             size_hint_x=None,
             pos_hint={'center_x': .5, 'center_y': .5},
-            width='96dp',
-            text='Ch. Up'
+            width='64dp',
+            text=''
         )
         btn_ch_dn = CommandButton(
+            background_normal='atlas://cave/data/images/myatlas/arrow_down_normal',
+            background_down='atlas://cave/data/images/myatlas/arrow_down_down',
             icon='atlas://cave/data/images/myatlas/blank',
             message='Channel down',
             command=Command(
@@ -77,15 +80,16 @@ class DeviceTab(SwipeAccordionItem):
             size_hint_y=None, height='48dp',
             size_hint_x=None,
             pos_hint={'center_x': .5, 'center_y': .5},
-            width='96dp',
-            text='Ch. Down'
+            width='64dp',
+            text=''
         )
         self.ids['button_panel_left'].add_widget(btn_ch_up)
         self.ids['button_panel_left'].add_widget(btn_ch_dn)
 
     def build_volume_controls(self, device):
         btn_vol_up = CommandButton(
-            icon='atlas://cave/data/images/myatlas/blank',
+            background_normal='atlas://cave/data/images/myatlas/plus_normal',
+            background_down='atlas://cave/data/images/myatlas/plus_down',
             message='Volume up',
             command=Command(
                 device['driver'],
@@ -94,11 +98,12 @@ class DeviceTab(SwipeAccordionItem):
             size_hint_y=None, height='48dp',
             size_hint_x=None,
             pos_hint={'center_x': .5},
-            width='96dp',
-            text='Vol +'
+            width='64dp',
+            text=''
         )
         btn_vol_dn = CommandButton(
-            icon='atlas://cave/data/images/myatlas/blank',
+            background_normal='atlas://cave/data/images/myatlas/minus_normal',
+            background_down='atlas://cave/data/images/myatlas/minus_down',
             message='Volume down',
             command=Command(
                 device['driver'],
@@ -107,8 +112,8 @@ class DeviceTab(SwipeAccordionItem):
             size_hint_y=None, height='48dp',
             size_hint_x=None,
             pos_hint={'center_x': .5},
-            width='96dp',
-            text='Vol -'
+            width='64dp',
+            text=''
         )
         self.ids['button_panel_right'].add_widget(btn_vol_up)
         self.ids['button_panel_right'].add_widget(btn_vol_dn)
