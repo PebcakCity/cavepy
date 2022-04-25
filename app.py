@@ -156,6 +156,5 @@ class CaveApp(App):
             self.update_status(str(e.args[0]))
 
 
-
 if __name__ == "__main__":
     CaveApp().run()
