@@ -8,11 +8,10 @@ Controller for AV Equipment
 
 [Installing]
 
-git clone https://github.com/tannmatter/cave
-cd cave && python -m venv venv
-pip install -r requirements.txt
-  or
-pip install -r requirements_rpi.txt (for testing on Raspberry Pi systems with GPIO)
+1. git clone https://github.com/tannmatter/cave
+2. cd cave && python -m venv venv
+3. pip install -r requirements.txt
+   (or pip install -r requirements_rpi.txt (for testing on Raspberry Pi systems with GPIO))
 
 [Running]
 
