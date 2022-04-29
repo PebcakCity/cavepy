@@ -1,12 +1,6 @@
-# cave
-Controller for AV Equipment
+Should support python v 3.7 - 3.10 (what Kivy supports)
 
-[Contents]
-
-- cave - a work in progress using Kivy, designed to run on a Raspberry Pi 7" touchscreen
-- cave/drivers - equipment drivers - projectors, switchers, tvs
-
-[Installing]
+Installing:
 
 git clone https://github.com/tannmatter/cave
 cd cave && python -m venv venv
@@ -14,9 +8,7 @@ pip install -r requirements.txt
   or
 pip install -r requirements_rpi.txt (for testing on Raspberry Pi systems with GPIO)
 
-[Running]
-
-If running on a Raspberry Pi with 7" touch screen, configure Kivy to run fullscreen in ~/.kivy/config.ini
+Running:
 
 1. Copy cave/data/example_config.xml to cave/data/config.xml
 2. Modify with your own equipment including addresses, ports, input codes, etc.
