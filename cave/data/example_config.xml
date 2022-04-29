@@ -1,0 +1,87 @@
+<system>
+    <location>My location</location>
+    <equipment>
+        <!--
+        equip
+            : id : internal id of the device, how we are referencing it to be able to control it.
+            : type : type of equipment - valid values are "projector", "television", "switcher"
+            : name : name of the device
+            : ip : ip address
+            : port : ip port
+            : serial : serial port device is connected to (instead of ip)
+            : baud : serial baud rate
+            : driver : python path to driver class
+
+            inputs
+                : type : how to interpret the text portion of each input xml node.  valid values are:
+                    : numeric : input codes are to be treated as numbers
+                    : string : input codes are to be treated as strings
+                    : base64 : input codes are base64 encoded binary data
+                    : bytes : input codes are bytes (non-base64-encoded byte string)
+                : default : name of the input to select on system reset (unimplemented currently)
+
+                input
+                    : name : name of the input
+                    : <text> : the correct code to select the input
+        -->
+
+        <!-- examples: -->
+
+        <!-- NEC projector over ethernet -->
+        <equip id="my_lan_controlled_nec" type="projector" name="NEC M300X" ip="xx.xx.xx.xx" port="7142"
+               driver="cave.drivers.projector.nec.NEC">
+            <inputs type="base64" default="Computer">
+                <input name="Computer">AQ==</input>
+                <input name="Apple TV">Gg==</input>
+                <input name="DVD">Bg==</input>
+            </inputs>
+        </equip>
+        <!-- NEC projector over serial -->
+        <equip id="my_rs232_controlled_nec" type="projector" name="NEC M300X" serial="/dev/ttyUSB0" baud="38400"
+               driver="cave.drivers.projector.nec.NEC">
+            <inputs type="base64" default="Computer">
+                <input name="PC">AQ==</input>
+                <input name="Bluray">Gg==</input>
+                <input name="DVD">Bg==</input>
+            </inputs>
+        </equip>
+        <!-- any projector supporting PJ-Link over ethernet (PJ-Link security/authentication must be turned off) -->
+        <equip id="my_pjlink_projector" type="projector" name="PJLink projector" ip="xx.xx.xx.xx" port="4352"
+               driver="cave.drivers.projector.pjlink.PJLink">
+            <inputs type="bytes" default="Apple TV">
+                <input name="Mac">11</input>
+                <input name="Apple TV">31</input>
+                <input name="Media Player">21</input>
+            </inputs>
+        </equip>
+        <!-- Samsung Exlink supported TV.  Tested on pre-2018 model below, don't have USB dongles for the newer ones. -->
+        <equip id="my_samsung_tv" type="television" name="Samsung UN32EH5300" serial="/dev/ttyUSB0" baud="9600"
+               driver="cave.drivers.tv.samsungexlink.SamsungExLink">
+            <inputs type="base64" default="HDMI 1">
+                <input name="TV">AAA=</input>
+                <input name="HDMI 1">BQA=</input>
+                <input name="HDMI 2">BQE=</input>
+                <input name="HDMI 3">BQI=</input>
+                <input name="Composite">AQA=</input>
+                <input name="Component">AwA=</input>
+            </inputs>
+        </equip>
+        <!-- a contact closure switch using Docker Pi relay hat mounted on Raspberry Pi,
+         for example Kramer automatic VGA/HDMI switchers -->
+        <equip id="my_switcher" type="switcher" name="Kramer VP-211K"
+               driver="cave.drivers.switcher.dockerpirelay.DockerPiRelay">
+            <inputs type="numeric" default="Input 1">
+                <input name="Input 1">1</input>
+                <input name="Input 2">2</input>
+            </inputs>
+        </equip>
+        <!-- a Kramer switcher supporting Kramer Protocol 3000 -->
+        <equip id="my_other_switcher" type="switcher" name="Kramer VS-211UHD" serial="/dev/ttyUSB1" baud="9600"
+               driver="cave.drivers.switcher.kramerp3000.KramerP3000">
+            <inputs type="string" default="Input 1">
+                <input name="Input 1">1</input>
+                <input name="Input 2">2</input>
+            </inputs>
+        </equip>
+    </equipment>
+</system>
