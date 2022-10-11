@@ -1,5 +1,5 @@
 # cavepy
-Controller for AV Equipment
+Controller for AV Equipment (in python)
 
 [Contents]
 
