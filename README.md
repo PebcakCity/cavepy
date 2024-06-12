@@ -8,7 +8,7 @@ Controller for AV Equipment (in python)
 
 [Installing]
 
-1. git clone https://github.com/tannmatter/cavepy
+1. git clone https://github.com/PebcakCity/cavepy
 2. cd cavepy && python -m venv venv
 3. pip install -r requirements.txt
    (or pip install -r requirements_rpi.txt (for testing on Raspberry Pi systems with GPIO))
